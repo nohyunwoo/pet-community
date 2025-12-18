@@ -34,13 +34,8 @@ import java.util.Optional;
 @Controller
 @RequiredArgsConstructor
 public class PostController {
-
-    private final UserRepository userRepository;
-    private final PostRepository postRepository;
     private final PostService postService;
-    private final CommentRepository commentRepository;
     private final CommentService commentService;
-    private final PostLikeRepository postLikeRepository;
     private final LikeService likeService;
 
     @GetMapping("/board")
@@ -84,10 +79,6 @@ public class PostController {
     @PostMapping("/post/like")
     public ResponseEntity<Void> like(@RequestParam Long postId,
                                      @AuthenticationPrincipal CustomUserDetails userDetails){
-        if (userDetails == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
         likeService.likePost(postId, userDetails.getId());
         return ResponseEntity.ok().build();
     }

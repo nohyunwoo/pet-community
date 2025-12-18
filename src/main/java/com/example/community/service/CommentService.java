@@ -32,9 +32,7 @@ public class CommentService {
 
         Comment comment = new Comment();
 
-        //내용
         comment.setContent(commentRequestDTO.getContent());
-        //post_id
         comment.setPost(post);
         comment.setUser(user);
 
