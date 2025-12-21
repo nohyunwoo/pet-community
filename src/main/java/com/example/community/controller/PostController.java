@@ -77,10 +77,10 @@ public class PostController {
     }
 
     @PostMapping("/post/like")
-    public ResponseEntity<Void> like(@RequestParam Long postId,
+    public ResponseEntity<Long> like(@RequestParam Long postId,
                                      @AuthenticationPrincipal CustomUserDetails userDetails){
-        likeService.likePost(postId, userDetails.getId());
-        return ResponseEntity.ok().build();
+        Long currentLikeCount = likeService.likePost(postId, userDetails.getId());
+        return ResponseEntity.ok(currentLikeCount);
     }
 
     @GetMapping("/like/count")

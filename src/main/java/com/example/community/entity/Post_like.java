@@ -13,7 +13,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-public class Post_like {
+public class
+Post_like {
 
     @Id @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;

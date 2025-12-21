@@ -19,24 +19,25 @@ public class LikeService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
-    public void likePost(Long postId, Long userId){
+    public Long likePost(Long postId, Long userId){
         String redisCountKey = "like_count:post:" + postId;
         String userLikeKey = "post_like:" + postId + ":" + userId;
 
         if(Boolean.TRUE.equals(redisTemplate.hasKey(userLikeKey))){
-            throw new RuntimeException("이미 누른 좋아요를 누른 사용자입니다.");
+            throw new RuntimeException("이미 좋아요를 누른 사용자입니다.");
         }
 
-        redisTemplate.opsForValue().increment(redisCountKey);
+        Long UpdatedCount = redisTemplate.opsForValue().increment(redisCountKey);
 
         redisTemplate.opsForValue().set(userLikeKey, "true");
 
-        Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("게시글 없음"));
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("사용자 없음"));
+        Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("해당 게시글이 없습니다."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("해당 사용자가 없습니다."));
 
         Post_like postLike = new Post_like(post, user);
 
         postLikeRepository.save(postLike);
+        return UpdatedCount;
     }
 
     public Long getLikeCount(Long postId) {
