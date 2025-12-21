@@ -1,333 +1,134 @@
-* {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #fef7ed;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            color: #92400e;
-            line-height: 1.6;
-        }
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            flex: 1;
-        }
+    body {
+        font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+        background-color: #ffffff;
+        color: #000000;
+    }
 
-        /* Header */
-        header {
-            background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            border-bottom: 2px solid #fed7aa;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            padding: 1rem 0;
-        }
+    /* 메인 컨테이너 */
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
 
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 2rem 0;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+    /* 배너 이미지 영역 */
+    .banner {
+        width: 100%;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+    }
 
-        .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #92400e;
-            text-decoration: none;
-            letter-spacing: 1px;
-        }
+    .banner-image {
+        max-width: 60%;
+        height: auto;
+        display: block;
+    }
 
-        .nav-links {
-            display: flex;
-            gap: 3rem;
-            list-style: none;
-        }
+    /* 게시물 목록 */
+    .posts-section {
+        background-color: #ffffff;
+    }
 
-        .nav-links a {
-            color: #b45309;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-size: 1.1rem;
-            padding: 0.5rem 0;
-        }
+    .section-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #ff6347;
+    }
 
-        .nav-links a:hover {
-            color: #92400e;
-            border-bottom: 2px solid #f59e0b;
-        }
+    .post-list {
+        border: 1px solid #e0e0e0;
+    }
 
-        .auth-buttons {
-            display: flex;
-            gap: 1rem;
-        }
+    .post-item {
+        padding: 12px 15px;
+        border-bottom: 1px solid #e0e0e0;
+        display: flex;
+        align-items: center;
+        transition: background-color 0.2s;
+        cursor: pointer;
+    }
 
-        .btn {
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-            text-align: center;
-            font-weight: 600;
-        }
+    .post-item:last-child {
+        border-bottom: none;
+    }
 
-        .btn-primary {
-            background: #fef3c7;
-            color: #b45309;
-            border: 2px solid #fed7aa;
-        }
+    .post-item:hover {
+        background-color: #f8f8f8;
+    }
 
-        .btn-primary:hover {
-            background: #fde68a;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.2);
-        }
+    .post-number {
+        width: 40px;
+        color: #666;
+        font-size: 14px;
+    }
 
-        .btn-secondary {
-            background: #d97706;
-            color: white;
-            border: 2px solid #d97706;
-        }
+    .post-title {
+        flex: 1;
+        font-size: 14px;
+        color: #000000;
+        margin-left: 10px;
+    }
 
-        .btn-secondary:hover {
-            background: #b45309;
-            border-color: #b45309;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(185, 83, 9, 0.3);
-        }
+    .post-title a {
+        color: #000000;
+        text-decoration: none;
+    }
 
-        /* Main Content */
-        main {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem 0;
-        }
+    .post-title a:hover {
+        text-decoration: underline;
+    }
 
-        .hero {
-            text-align: center;
-            color: #92400e;
-            max-width: 600px;
-            background: white;
-            border-radius: 20px;
-            padding: 3rem 2rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            border: 2px solid #fed7aa;
-            margin-bottom: 2rem;
-        }
+    .post-meta {
+        display: flex;
+        gap: 10px;
+        font-size: 12px;
+        color: #666;
+    }
 
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            font-weight: bold;
-            color: #92400e;
-            opacity: 0;
-            animation: fadeInUp 1s ease-out 0.3s forwards;
-        }
+    .post-author {
+        min-width: 80px;
+    }
 
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            color: #b45309;
-            opacity: 0;
-            animation: fadeInUp 1s ease-out 0.6s forwards;
-        }
+    .post-date {
+        min-width: 80px;
+    }
 
-        .cta-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            opacity: 0;
-            animation: fadeInUp 1s ease-out 0.9s forwards;
-        }
+    .post-views {
+        min-width: 50px;
+        text-align: right;
+    }
 
-        .btn-large {
-            padding: 1rem 2rem;
-            font-size: 1.1rem;
-            border-radius: 30px;
-            font-weight: 600;
-        }
+    /* 더보기 버튼 */
+    .more-button {
+        text-align: center;
+        margin-top: 15px;
+    }
 
-        /* Recent Posts Section */
-        .recent-posts {
-            background: white;
-            border-radius: 20px;
-            padding: 2rem;
-            margin: 3rem 0;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            border: 2px solid #fed7aa;
-        }
+    .more-button a {
+        display: inline-block;
+        padding: 8px 30px;
+        background-color: #ffffff;
+        color: #ff6347;
+        border: 1px solid #ff6347;
+        text-decoration: none;
+        font-size: 14px;
+        transition: all 0.2s;
+    }
 
-        .recent-posts h2 {
-            color: #92400e;
-            margin-bottom: 1.5rem;
-            font-size: 1.5rem;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .recent-posts h2::before {
-            content: "🐾";
-            font-size: 1.2em;
-        }
-
-        .post-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 0;
-            border-bottom: 1px solid #fed7aa;
-            transition: all 0.3s;
-            cursor: pointer;
-            border-radius: 10px;
-        }
-
-        .post-item:last-child {
-            border-bottom: none;
-        }
-
-        .post-item:hover {
-            background: #fef3c7;
-            padding-left: 1rem;
-            padding-right: 1rem;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.1);
-        }
-
-        .post-title {
-            color: #92400e;
-            font-size: 1rem;
-            flex: 1;
-            font-weight: 600;
-        }
-
-        .post-title a {
-            color: #92400e;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .post-title a:hover {
-            color: #b45309;
-        }
-
-        .post-meta {
-            color: #b45309;
-            font-size: 0.9rem;
-            display: flex;
-            gap: 1rem;
-            font-weight: 500;
-        }
-
-        .post-meta span {
-            background: #fef3c7;
-            padding: 0.3rem 0.8rem;
-            border-radius: 15px;
-            font-size: 0.85rem;
-        }
-
-        /* Footer */
-        footer {
-            background: white;
-            color: #92400e;
-            text-align: center;
-            padding: 2rem 0;
-            margin-top: auto;
-            border-top: 2px solid #fed7aa;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-        }
-
-        footer p {
-            font-weight: 500;
-            color: #b45309;
-        }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-
-            .hero {
-                margin: 1rem;
-                padding: 2rem 1.5rem;
-            }
-
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .cta-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .post-meta {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-
-            .post-meta span {
-                font-size: 0.8rem;
-                padding: 0.2rem 0.6rem;
-            }
-
-            .recent-posts {
-                margin: 1rem;
-                padding: 1.5rem;
-            }
-        }
-
-        /* 추가 애완동물 테마 요소 */
-        .hero::before {
-            content: "🐕🐱";
-            font-size: 3rem;
-            display: block;
-            margin-bottom: 1rem;
-            opacity: 0;
-            animation: fadeInUp 1s ease-out 0.1s forwards;
-        }
-
-        /* 네비게이션 호버 효과 개선 */
-        .logo:hover {
-            color: #f59e0b;
-            transform: scale(1.05);
-            transition: all 0.3s ease;
-        }
-
-        /* 스크롤시 헤더 효과 */
-        header.scrolled {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-        }
+    .more-button a:hover {
+        background-color: #ff6347;
+        color: #ffffff;
+    }

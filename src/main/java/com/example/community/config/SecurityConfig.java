@@ -38,7 +38,14 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable());
 
         http.authorizeHttpRequests(authorize ->
-                authorize.requestMatchers("/**").permitAll()
+                authorize
+                    .requestMatchers("/", "/home", "/board/**", "/login", "/register", 
+                                   "/css/**", "/js/**", "/images/**",
+                                   "/*.css", "/*.js", "/*.jpg", "/*.png", "/*.jpeg", "/*.gif",
+                                   "/nav.css", "/home.css", "/board.css", "/post.css", "/postview.css", "/profile.css",
+                                   "/banner.jpg").permitAll()
+                                   
+                    .anyRequest().authenticated()
         );
 
 
@@ -47,7 +54,15 @@ public class SecurityConfig {
                         .loginPage("/login")
                         .defaultSuccessUrl("/home", true)
                         .failureUrl("/login?error=true")
+                        .permitAll()
         );
+
+        http.logout(logout ->
+            logout
+                    .logoutUrl("/logout")
+                    .logoutSuccessUrl("/home")
+                    .permitAll()
+    );
         return http.build();
     }
 }

@@ -2,24 +2,25 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <div th:fragment="navbar">
-    <header>
-        <nav class="container">
-            <a href="#" class="logo">🐾펫씨</a>
-            <ul class="nav-links">
-                <li><a href="/home">홈</a></li>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">🐾 펫 커뮤니티</div>
+            <ul class="nav-menu">
+                <li><a href="/home" class="active">홈</a></li>
                 <li><a href="/board">게시판</a></li>
                 <li><a href="/profile">프로필</a></li>
             </ul>
-            <div class="auth-buttons">
-                <div th:if="${#authorization.expression('isAuthenticated()')}">
-                    <span th:text="|${#authentication.principal.displayName}님 환영합니다!|"></span>
-                    <a href="/logout" class="btn btn-secondary">로그아웃</a>
-                </div>
-                <div th:unless="${#authorization.expression('isAuthenticated()')}">
-                    <a href="/login" class="btn btn-primary">로그인</a>
-                    <a href="/register" class="btn btn-secondary">회원가입</a>
-                </div>
-            </div>
-        </nav>
-    </header>
+            <ul class="auth-menu">
+                <li th:if="${#authorization.expression('isAuthenticated()')}">
+                    <a href="/logout">로그아웃</a>
+                </li>
+                <li th:unless="${#authorization.expression('isAuthenticated()')}">
+                    <a href="/login">로그인</a>
+                </li>
+                <li th:unless="${#authorization.expression('isAuthenticated()')}">
+                    <a href="/register">회원가입</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 </div>

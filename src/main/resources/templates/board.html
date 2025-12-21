@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>게시판 - PetsLoview</title>
+    <link rel="stylesheet" href="/nav.css">
     <link rel="stylesheet" href="/board.css">
 </head>
 <body>
@@ -96,6 +97,7 @@
         </div>
     </footer>
 
+    <script>
         // 페이지네이션
         document.querySelectorAll('.page-btn').forEach(btn => {
             btn.addEventListener('click', function() {
@@ -104,16 +106,6 @@
                     this.classList.add('active');
                 }
             });
-        });
-
-        // 네비게이션 스크롤 효과
-        window.addEventListener('scroll', function() {
-            const header = document.querySelector('header');
-            if (window.scrollY > 50) {
-                header.style.background = 'rgba(255, 255, 255, 0.15)';
-            } else {
-                header.style.background = 'rgba(255, 255, 255, 0.1)';
-            }
         });
     </script>
 </body>
