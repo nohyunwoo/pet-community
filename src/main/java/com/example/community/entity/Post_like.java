@@ -3,6 +3,7 @@ package com.example.community.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,9 +14,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-public class
-Post_like {
-
+@NoArgsConstructor
+public class Post_like {
     @Id @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -31,15 +31,9 @@ Post_like {
 
     private LocalDateTime createdAt;
 
-    public Post_like() {
-
-    }
-
     public void increaseLike(){
         this.likeCount++;
     }
-
-
 
     public Post_like(Post post, User user) {
         this.post = post;
