@@ -21,19 +21,18 @@ public class MyUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
-        Optional<User> byUsername = userRepository.findByUsername(username);
-        if(byUsername.isEmpty()){
-            throw new UsernameNotFoundException("아이디가 존재하지 않음");
-        }
+        User user = userRepository.findByUsername(username).orElseThrow(() ->
+                new UsernameNotFoundException("아이디가 존재하지 않습니다."));
 
-        User user = byUsername.get();
         ArrayList<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("일반유저"));
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
-        CustomUserDetails customUserDetails = new CustomUserDetails(
-                user.getUsername(), user.getPassword(), authorities, user.getDisplayName(), user.getId());
-
-        return customUserDetails;
+        return new CustomUserDetails(
+                user.getUsername(),
+                user.getPassword(),
+                authorities,
+                user.getDisplayName(),
+                user.getId()
+        );
     }
-
 }

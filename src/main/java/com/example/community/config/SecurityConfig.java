@@ -1,6 +1,9 @@
 package com.example.community.config;
 
 
+import com.example.community.exception.CustomAccessDeniedHandler;
+import com.example.community.exception.CustomAuthenticationEntryPoint;
+import com.example.community.exception.GlobalExceptionHandler;
 import com.example.community.security.MyUserDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,8 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 public class SecurityConfig {
 
     private final MyUserDetailService myUserDetailService;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -43,9 +48,15 @@ public class SecurityConfig {
                                    "/css/**", "/js/**", "/images/**",
                                    "/*.css", "/*.js", "/*.jpg", "/*.png", "/*.jpeg", "/*.gif",
                                    "/nav.css", "/home.css", "/board.css", "/post.css", "/postview.css", "/profile.css",
-                                   "/banner.jpg").permitAll()
+                                   "/banner.jpg","/favicon.ico").permitAll()
                                    
                     .anyRequest().authenticated()
+        );
+
+        // 2. [핵심] 예외 처리 핸들러를 시큐리티 필터 체인에 등록합니다.
+        http.exceptionHandling(handler -> handler
+                .authenticationEntryPoint(customAuthenticationEntryPoint) // 401: 인증 실패 시 실행
+                .accessDeniedHandler(customAccessDeniedHandler)           // 403: 권한 부족 시 실행
         );
 
 
