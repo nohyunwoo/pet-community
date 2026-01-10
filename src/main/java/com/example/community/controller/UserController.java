@@ -1,22 +1,14 @@
 package com.example.community.controller;
 
 import com.example.community.dto.UserRequestDTO;
-import com.example.community.entity.User;
-import com.example.community.repository.UserRepository;
-import com.example.community.security.CustomUserDetails;
 import com.example.community.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.context.annotation.RequestScope;
 
 @Controller
 @RequiredArgsConstructor
