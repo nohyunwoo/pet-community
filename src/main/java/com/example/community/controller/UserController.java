@@ -1,14 +1,17 @@
 package com.example.community.controller;
 
+import com.example.community.dto.UserRequestDTO;
 import com.example.community.entity.User;
 import com.example.community.repository.UserRepository;
 import com.example.community.security.CustomUserDetails;
+import com.example.community.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.annotation.RequestScope;
@@ -16,9 +19,7 @@ import org.springframework.web.context.annotation.RequestScope;
 @Controller
 @RequiredArgsConstructor
 public class UserController {
-
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
 
     @GetMapping("/login")
     public String Login(){
@@ -31,15 +32,8 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String postRegister(@RequestParam String displayName,
-                               @RequestParam String username,
-                               @RequestParam String password){
-        User user = new User();
-        user.setDisplayName(displayName);
-        user.setUsername(username);
-        String encode = passwordEncoder.encode(password);
-        user.setPassword(encode);
-        userRepository.save(user);
+    public String register(@ModelAttribute UserRequestDTO userRequestDTO){
+        userService.userRegister(userRequestDTO);
         return "redirect:/login";
     }
 
