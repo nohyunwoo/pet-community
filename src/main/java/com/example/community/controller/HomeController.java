@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -25,10 +26,11 @@ public class HomeController {
         List<Post> postList = homeService.getTop5Posts();
         model.addAttribute("postList", postList);
 
-        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
-            CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
-            model.addAttribute("displayName", user.getDisplayName());
-        }
+        Optional.ofNullable(authentication)
+                .map(Authentication::getPrincipal)
+                .filter(principal ->principal instanceof CustomUserDetails)
+                .map(principal ->(CustomUserDetails)principal)
+                .ifPresent(user -> model.addAttribute("displayName", user.getDisplayName()));
         return "home";
     }
 }
