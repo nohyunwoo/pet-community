@@ -96,7 +96,7 @@
         document.querySelector('.like-btn').addEventListener('click', function () {
             const postId = this.getAttribute('data-post-id');
 
-            fetch('/post/like', {
+            fetch('/post-like', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'

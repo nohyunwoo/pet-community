@@ -52,7 +52,7 @@ public class PostController {
         return "redirect:/board";
     }
 
-    @PostMapping("/post/like")
+    @PostMapping("/post-like")
     public ResponseEntity<Long> like(@RequestParam Long postId,
                                      @AuthenticationPrincipal CustomUserDetails userDetails){
         Long currentLikeCount = likeService.likePost(postId, userDetails.getId());
