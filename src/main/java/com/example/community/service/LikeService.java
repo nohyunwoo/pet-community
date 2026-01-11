@@ -48,7 +48,8 @@ public class LikeService {
             return Long.parseLong(countStr);
         }
 
-        Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("게시글 없음"));
+        Post post = postRepository.findById(postId).orElseThrow(()->
+                    new RuntimeException("게시글 없음"));
 
         Long count = postLikeRepository.countByPost(post);
         redisTemplate.opsForValue().set(redisKey, String.valueOf(count));
