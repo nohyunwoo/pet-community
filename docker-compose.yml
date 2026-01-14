@@ -6,8 +6,8 @@ services:
     container_name: community_mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: zltkak1122
-      MYSQL_DATABASE: community
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=community
     ports:
       - "3306:3306"
     volumes:
@@ -31,7 +31,10 @@ services:
       redis:
         condition: service_healthy
     environment:
-      SPRING_PROFILES_ACTIVE: prod
+      - SPRING_PROFILES_ACTIVE: prod
+      - SPRING_DATASOURCE_URL=${MYSQL_URL}
+      - SPRING_DATASOURCE_USERNAME=${MYSQL_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
     ports:
       - "8080:8080"
     volumes:
