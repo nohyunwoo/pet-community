@@ -42,7 +42,8 @@ jobs:
         envs: MYSQL_URL, MYSQL_USERNAME, MYSQL_PASSWORD
         script: |
           cd ~/community
-          git pull
+          git fetch --all
+          git reset --hard origin/main
           docker compose pull
           docker compose down
           docker compose up -d
