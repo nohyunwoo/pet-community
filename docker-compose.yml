@@ -15,7 +15,7 @@ services:
     networks:
       - community-net
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-pzltkak1122" ]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-p$${MYSQL_PASSWORD}" ]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -31,7 +31,7 @@ services:
       redis:
         condition: service_healthy
     environment:
-      - SPRING_PROFILES_ACTIVE: prod
+      - SPRING_PROFILES_ACTIVE=prod
       - SPRING_DATASOURCE_URL=${MYSQL_URL}
       - SPRING_DATASOURCE_USERNAME=${MYSQL_USERNAME}
       - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
