@@ -1,0 +1,33 @@
+### Java & Gradle ###
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+bin/
+out/
+*.jar
+*.war
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+atlassian-ide-plugin.xml
+com_zeroturnaround_jrebel_remoting_EntitySerializerConfig.xml
+
+### Sensitive Files (가장 중요!) ###
+src/main/resources/application-local.yml
+src/main/resources/application-prod.yml
+src/main/resources/application-local.properties
+src/main/resources/application-prod.properties
+
+### Docker & Environment ###
+.env
+*.db
+docker-compose.override.yml
+
+### Logs & OS Specific ###
+*.log
+.DS_Store
+Thumbs.db
+desktop.ini

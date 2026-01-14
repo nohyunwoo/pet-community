@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>커뮤니티</title>
+    <link rel="stylesheet" href="/nav.css">
+    <link rel="stylesheet" href="/board.css">
+</head>
+<body>
+    <div th:replace="nav :: navbar"></div>
+    <!-- 메인 컨테이너 -->
+    <main>
+        <div class="container">
+            <!-- 게시판 헤더 -->
+            <div class="board-header">
+                <div class="board-title-section">
+                    <div class="board-title">자유게시판</div>
+                    <div class="board-subtitle">자유롭게 이야기를 나눠보세요</div>
+                </div>
+                <a href="/post" class="write-btn">새 글 작성</a>
+            </div>
+
+            <!-- 검색 영역 -->
+            <div class="search-section">
+                <form style="flex: 1; display: flex; gap: 10px;">
+                    <input name="keyword" type="text" class="search-input" placeholder="검색어를 입력하세요">
+                    <select class="search-select">
+                        <option value="all">전체</option>
+                        <option value="title">제목</option>
+                        <option value="content">내용</option>
+                        <option value="author">작성자</option>
+                    </select>
+                    <select class="search-select">
+                        <option value="latest">최신순</option>
+                        <option value="views">조회순</option>
+                        <option value="comments">댓글순</option>
+                    </select>
+                    <button type="submit" class="search-btn">검색</button>
+                </form>
+            </div>
+
+            <!-- 게시물 목록 -->
+            <div class="post-list">
+                <div th:if="${posts.totalElements > 0}">
+                    <div th:each="post, iterStat : ${posts.content}" class="post-item" th:onclick="'location.href=\'/post/' + ${post.id} + '\''">
+                        <span class="post-number" th:text="${posts.totalElements - (posts.number * posts.size) - iterStat.index}">1</span>
+                        <div class="post-info">
+                            <span class="post-category" th:text="${post.category}">자유</span>
+                            <a class="post-title-text" th:href="@{'/post/' + ${post.id}}" th:text="${post.title}">게시글 제목</a>
+                        </div>
+                        <div class="post-meta">
+                            <span class="post-author" th:text="${post.user.username}">작성자</span>
+                            <span class="post-date" th:text="${@timeAgo.format(post.createdAt)}">2024.12.21</span>
+                            <span class="post-views" th:text="'조회 ' + ${post.count}">조회 128</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div th:if="${posts.totalElements == 0}">
+                    <p class="empty-message">게시글이 없습니다.</p>
+                </div>
+            </div>
+
+            <!-- 페이지네이션 -->
+            <div class="pagination" th:if="${posts != null and posts.totalPages > 0}">
+                <!-- 이전 버튼 -->
+                <button class="page-btn"
+                        th:if="${posts.number > 0}"
+                        th:onclick="'location.href=\'/board?page=' + (${posts.number} - 1) + '&size=' + ${posts.size} + (${keyword} != null ? '&keyword=' + ${keyword} : '') + '\''">
+                    이전
+                </button>
+
+                <!-- 페이지 번호 버튼 -->
+                <th:block th:each="i : ${#numbers.sequence(0, posts.totalPages - 1)}">
+                    <button class="page-btn"
+                            th:classappend="${i == posts.number} ? 'active' : ''"
+                            th:onclick="'location.href=\'/board?page=' + ${i} + '&size=' + ${posts.size} + (${keyword} != null ? '&keyword=' + ${keyword} : '') + '\''"
+                            th:text="${i + 1}">
+                    </button>
+                </th:block>
+
+                <!-- 다음 버튼 -->
+                <button class="page-btn"
+                        th:if="${posts.number < posts.totalPages - 1}"
+                        th:onclick="'location.href=\'/board?page=' + (${posts.number} + 1) + '&size=' + ${posts.size} + (${keyword} != null ? '&keyword=' + ${keyword} : '') + '\''">
+                    다음
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // 페이지네이션
+        document.querySelectorAll('.page-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+                if (!isNaN(this.textContent)) {
+                    this.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>커뮤니티</title>
+  <link rel="stylesheet" href="/nav.css">
+  <link rel="stylesheet" href="/register.css">
+</head>
+
+<body>
+  <div th:replace="nav :: navbar"></div>
+
+  <div class="container">
+    <div class="register-box">
+      <h1 class="register-title">회원가입</h1>
+
+      <form action="/register" method="post">
+        <div class="form-group">
+          <label for="username">이름 <span class="required">*</span></label>
+          <input type="text" id="username" name="username" required>
+        </div>
+
+        <div class="form-group">
+          <label for="userId">아이디 <span class="required">*</span></label>
+          <input type="text" id="userId" name="userId" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">비밀번호 <span class="required">*</span></label>
+          <input type="password" id="password" name="password" required>
+        </div>
+
+        <div class="form-group">
+          <label for="passwordConfirm">비밀번호 확인 <span class="required">*</span></label>
+          <input type="password" id="passwordConfirm" name="passwordConfirm" required>
+        </div>
+
+        <div class="form-group">
+          <label>성별 <span class="required">*</span></label>
+          <div class="radio-group">
+            <label>
+              <input type="radio" name="sex" value="남성" required>
+              남성
+            </label>
+            <label>
+              <input type="radio" name="sex" value="여성" required>
+              여성
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="userDate">생년월일 <span class="required">*</span></label>
+          <input type="date" id="userDate" name="userDate" required>
+        </div>
+
+        <div class="button-group">
+          <button type="submit" class="btn btn-primary">회원가입</button>
+          <button type="button" class="btn btn-secondary" onclick="location.href='/home'">취소</button>
+        </div>
+      </form>
+
+      <div class="form-footer">
+        이미 계정이 있으신가요? <a href="/login">로그인</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

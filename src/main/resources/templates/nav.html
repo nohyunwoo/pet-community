@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="navbar">
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">🐾 펫 커뮤니티</div>
+            <ul class="nav-menu">
+                <li><a href="/home" class="active">홈</a></li>
+                <li><a href="/board">게시판</a></li>
+                <li><a href="/profile">프로필</a></li>
+            </ul>
+            <ul class="auth-menu">
+                <li th:if="${#authorization.expression('isAuthenticated()')}">
+                    <a href="/logout">로그아웃</a>
+                </li>
+                <li th:unless="${#authorization.expression('isAuthenticated()')}">
+                    <a href="/login">로그인</a>
+                </li>
+                <li th:unless="${#authorization.expression('isAuthenticated()')}">
+                    <a href="/register">회원가입</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>

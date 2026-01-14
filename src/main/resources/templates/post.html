@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>커뮤니티</title>
+  <link rel="stylesheet" href="/nav.css">
+  <link rel="stylesheet" href="/post.css">
+</head>
+<body>
+  <div th:replace="nav :: navbar"></div>
+
+  <div class="container">
+    <div class="page-header">
+      <div class="page-title">새 글 작성</div>
+      <div class="page-subtitle">자유롭게 여러분의 이야기를 들려주세요</div>
+    </div>
+
+    <form action="/post" method="post" class="write-form" enctype="multipart/form-data">
+      <div class="form-group required">
+        <label for="category">카테고리</label>
+        <select name="category" id="category" class="form-control" required>
+          <option value="">카테고리를 선택하세요</option>
+          <option value="자유">자유게시판</option>
+          <option value="질문">질문</option>
+          <option value="가입인사">가입인사</option>
+        </select>
+      </div>
+
+      <div class="form-group required">
+        <label for="title">제목</label>
+        <input name="title" type="text" id="title" class="form-control"
+               placeholder="제목을 입력하세요" required maxlength="100">
+        <div class="char-counter" id="titleCounter">0 / 100</div>
+      </div>
+
+      <div class="form-group required">
+        <label for="content">내용</label>
+        <textarea name="content" id="content" class="form-control"
+                  placeholder="내용을 입력하세요" required maxlength="5000"></textarea>
+        <div class="char-counter" id="contentCounter">0 / 5000</div>
+      </div>
+
+      <div class="form-group">
+        <label for="imageFile">사진 첨부</label>
+        <input type="file" id="imageFile" name="imageFile" class="form-control"
+               accept="image/*" style="padding: 8px;">
+        <div style="font-size: 12px; color: #999; margin-top: 5px;">
+          jpg, png, gif 파일만 가능 (최대 5MB)
+        </div>
+        <div id="imagePreview" style="margin-top: 10px;"></div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" onclick="goBack()">취소</button>
+        <button type="submit" class="btn btn-primary">게시글 등록</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    // 문자 수 카운터
+    function updateCharCounter(input, counterId, maxLength) {
+        const current = input.value.length;
+        const counterEl = document.getElementById(counterId);
+        counterEl.textContent = `${current} / ${maxLength}`;
+
+        if (current > maxLength * 0.9) {
+            counterEl.className = 'char-counter danger';
+        } else if (current > maxLength * 0.7) {
+            counterEl.className = 'char-counter warning';
+        } else {
+            counterEl.className = 'char-counter';
+        }
+    }
+
+    // 제목 카운터
+    document.getElementById('title').addEventListener('input', function() {
+        updateCharCounter(this, 'titleCounter', 100);
+    });
+
+    // 내용 카운터
+    document.getElementById('content').addEventListener('input', function() {
+        updateCharCounter(this, 'contentCounter', 5000);
+    });
+
+    // 이미지 미리보기
+    document.getElementById('imageFile').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        const previewDiv = document.getElementById('imagePreview');
+
+        // 기존 미리보기 제거
+        previewDiv.innerHTML = '';
+
+        if (file) {
+            // 파일 크기 체크 (5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('이미지 파일 크기는 5MB를 초과할 수 없습니다.');
+                this.value = '';
+                return;
+            }
+
+            // 이미지 파일 체크
+            if (!file.type.startsWith('image/')) {
+                alert('이미지 파일만 업로드 가능합니다.');
+                this.value = '';
+                return;
+            }
+
+            // 미리보기 생성
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const container = document.createElement('div');
+                container.className = 'image-preview-container';
+
+                const img = document.createElement('img');
+                img.src = e.target.result;
+
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'image-remove-btn';
+                removeBtn.innerHTML = '×';
+                removeBtn.onclick = function() {
+                    previewDiv.innerHTML = '';
+                    document.getElementById('imageFile').value = '';
+                };
+
+                container.appendChild(img);
+                container.appendChild(removeBtn);
+                previewDiv.appendChild(container);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // 취소
+    function goBack() {
+        const title = document.getElementById('title').value;
+        const content = document.getElementById('content').value;
+
+        if (title || content) {
+            if (confirm('작성 중인 내용이 있습니다. 정말 나가시겠습니까?')) {
+                history.back();
+            }
+        } else {
+            history.back();
+        }
+    }
+
+    // 폼 제출 전 확인
+    document.querySelector('.write-form').addEventListener('submit', function(e) {
+        const category = document.getElementById('category').value;
+        const title = document.getElementById('title').value.trim();
+        const content = document.getElementById('content').value.trim();
+
+        if (!category || !title || !content) {
+            e.preventDefault();
+            alert('모든 필수 항목을 입력해주세요.');
+            return false;
+        }
+    });
+  </script>
+</body>
+</html>

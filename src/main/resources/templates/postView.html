@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>커뮤니티</title>
+    <link rel="stylesheet" href="/nav.css">
+    <link rel="stylesheet" href="/postview.css">
+</head>
+<body>
+    <div th:replace="nav :: navbar"></div>
+    <main>
+        <div class="container">
+            <a href="/board" class="back-btn">← 목록으로 돌아가기</a>
+
+            <div class="post-container">
+                <div class="post-header">
+                    <h1 th:text="${post.title}" class="post-title">우리 강아지 산책 코스 추천해주세요!</h1>
+                    <div class="post-meta">
+                        <span>👤 <span th:text="${post.user.username}">멍멍이주인</span></span>
+                        <span>📅 <span th:text="${@timeAgo.format(post.createdAt)}">2시간 전</span></span>
+                        <span>👁 <span th:text="${post.count}">128</span></span>
+                    </div>
+                    <input type="hidden" name="postId" th:value="${post.id}" />
+                    <div class="post-actions">
+                        <button class="action-btn like-btn" th:attr="data-post-id=${post.id}">👍 좋아요</button>
+                        <button class="action-btn">📱 공유</button>
+                        <button class="action-btn">⚠️ 신고</button>
+                    </div>
+                </div>
+
+                <div class="post-image" th:if="${post.storedFileName != null}">
+                    <img th:src="@{/upload/{fileName}(fileName=${post.storedFileName})}" alt="게시글 이미지">
+                </div>
+
+                <div class="post-content" th:text="${post.content}">
+                    안녕하세요! 강아지와 함께 산책할 만한 좋은 코스를 찾고 있습니다.
+                    집 근처에 공원이 있긴 한데, 다른 곳도 가보고 싶어서요.
+                    추천 부탁드립니다!
+                </div>
+
+                <div class="post-stats">
+                    <span id="like-count">좋아요 <span th:text="${likeCount}">15</span>개</span>
+                    <span>댓글 <span th:text="${count}">8</span>개</span>
+                    <span th:text="${'조회수 '+ post.count + '회'}">조회수 128회</span>
+                </div>
+            </div>
+
+            <!-- 댓글 섹션 -->
+            <div class="comments-section">
+                <div class="comments-header">
+                    💬 댓글 <span th:text="${count}">8</span>개
+                </div>
+
+                <form action="/comment" method="post">
+                    <div class="comment-form">
+                        <textarea name="content" class="comment-textarea" placeholder="댓글을 작성해보세요..." required></textarea>
+                        <input name="postId" type="hidden" th:value="${post.id}" />
+                        <div class="comment-form-footer">
+                            <span class="comment-author">익명으로 작성</span>
+                            <button class="submit-btn" type="submit">댓글 작성</button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="comments-list" th:if="${not #lists.isEmpty(comments)}">
+                    <div class="comment-item" th:each="comment : ${comments}">
+                        <div class="comment-header">
+                            <div class="comment-author-info">
+                                <span class="comment-author-name" th:text="${comment.user.username}">냥이사랑</span>
+                                <span class="comment-date" th:text="${@timeAgo.format(comment.createdAt)}">1시간 전</span>
+                            </div>
+                            <div class="comment-actions">
+                                <button class="comment-action">답글</button>
+                                <button class="comment-action">👍 5</button>
+                                <button class="comment-action">⚠️</button>
+                            </div>
+                        </div>
+                        <div class="comment-content" th:text="${comment.content}">
+                            한강공원 추천드려요! 강아지들이 정말 좋아합니다.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="empty-message" th:if="${#lists.isEmpty(comments)}">
+                    아직 댓글이 없습니다. 첫 댓글을 작성해보세요!
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // 좋아요 버튼
+        document.querySelector('.like-btn').addEventListener('click', function () {
+            const postId = this.getAttribute('data-post-id');
+
+            fetch('/post-like', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `postId=${postId}`
+            })
+            .then(() => {
+                return fetch(`/like/count?postId=${postId}`);
+            })
+            .then(response => response.text())
+            .then(likeCount => {
+                document.getElementById('like-count').innerHTML = `좋아요 <span>${likeCount}</span>개`;
+            })
+            .catch(err => {
+                console.error('에러 발생:', err);
+            });
+        });
+    </script>
+</body>
+</html>

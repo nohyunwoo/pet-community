@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>커뮤니티</title>
+    <link rel="stylesheet" href="/nav.css">
+    <link rel="stylesheet" href="/home.css">
+</head>
+<body>
+    <div th:replace="nav :: navbar"></div>
+    
+    <!-- 메인 컨테이너 -->
+    <div class="container">
+        <!-- 배너 이미지 영역 -->
+        <div class="banner">
+            <img src="/banner.jpg" alt="애완동물 커뮤니티 배너" class="banner-image">
+        </div>
+
+        <!-- 최신 게시물 -->
+        <div class="posts-section">
+            <h2 class="section-title">최신 게시물</h2>
+            <div class="post-list">
+                <div th:each="post, iterStat : ${postList}" class="post-item">
+                    <span class="post-number" th:text="${iterStat.count}">1</span>
+                    <span class="post-title">
+                        <a th:href="@{'/post/' + ${post.id}}" th:text="${post.title}">게시글 제목</a>
+                    </span>
+                    <div class="post-meta">
+                        <span class="post-author" th:text="${post.user.username}">작성자</span>
+                        <span class="post-date" th:text="${@timeAgo.format(post.createdAt)}">작성일</span>
+                        <span class="post-views" th:text="'조회 ' + ${post.count}">조회 128</span>
+                    </div>
+                </div>
+            </div>
+            <div class="more-button">
+                <a href="/board">더보기 +</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

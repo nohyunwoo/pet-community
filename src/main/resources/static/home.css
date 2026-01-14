@@ -1,0 +1,134 @@
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+        background-color: #ffffff;
+        color: #000000;
+    }
+
+    /* 메인 컨테이너 */
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    /* 배너 이미지 영역 */
+    .banner {
+        width: 100%;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .banner-image {
+        max-width: 60%;
+        height: auto;
+        display: block;
+    }
+
+    /* 게시물 목록 */
+    .posts-section {
+        background-color: #ffffff;
+    }
+
+    .section-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #ff6347;
+    }
+
+    .post-list {
+        border: 1px solid #e0e0e0;
+    }
+
+    .post-item {
+        padding: 12px 15px;
+        border-bottom: 1px solid #e0e0e0;
+        display: flex;
+        align-items: center;
+        transition: background-color 0.2s;
+        cursor: pointer;
+    }
+
+    .post-item:last-child {
+        border-bottom: none;
+    }
+
+    .post-item:hover {
+        background-color: #f8f8f8;
+    }
+
+    .post-number {
+        width: 40px;
+        color: #666;
+        font-size: 14px;
+    }
+
+    .post-title {
+        flex: 1;
+        font-size: 14px;
+        color: #000000;
+        margin-left: 10px;
+    }
+
+    .post-title a {
+        color: #000000;
+        text-decoration: none;
+    }
+
+    .post-title a:hover {
+        text-decoration: underline;
+    }
+
+    .post-meta {
+        display: flex;
+        gap: 10px;
+        font-size: 12px;
+        color: #666;
+    }
+
+    .post-author {
+        min-width: 80px;
+    }
+
+    .post-date {
+        min-width: 80px;
+    }
+
+    .post-views {
+        min-width: 50px;
+        text-align: right;
+    }
+
+    /* 더보기 버튼 */
+    .more-button {
+        text-align: center;
+        margin-top: 15px;
+    }
+
+    .more-button a {
+        display: inline-block;
+        padding: 8px 30px;
+        background-color: #ffffff;
+        color: #ff6347;
+        border: 1px solid #ff6347;
+        text-decoration: none;
+        font-size: 14px;
+        transition: all 0.2s;
+    }
+
+    .more-button a:hover {
+        background-color: #ff6347;
+        color: #ffffff;
+    }

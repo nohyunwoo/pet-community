@@ -1,0 +1,43 @@
+name: Deploy Spring Boot (Docker)
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Build JAR
+      run: |
+        chmod +x ./gradlew
+        ./gradlew clean build -x test
+
+    - name: Build & Push Docker Image
+      run: |
+        echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/community-server:latest .
+        docker push ${{ secrets.DOCKER_USERNAME }}/community-server:latest
+
+    - name: Deploy to EC2
+      uses: appleboy/ssh-action@v0.1.5
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          cd ~/community
+          git pull
+          docker compose pull
+          docker compose down
+          docker compose up -d
