@@ -31,6 +31,10 @@ jobs:
 
     - name: Deploy to EC2
       uses: appleboy/ssh-action@v0.1.5
+      env:
+        MYSQL_URL: ${{ secrets.MYSQL_URL }}
+        MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
+        MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
