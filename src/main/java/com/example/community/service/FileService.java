@@ -1,5 +1,6 @@
 package com.example.community.service;
 
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,13 +18,21 @@ public class FileService {
     public String storeFile(MultipartFile file) throws IOException {
         if (file == null || file.isEmpty()) return null;
 
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            throw new IllegalArgumentException("이미지 파일만 업로드 가능합니다.");
+        }
+
         String originalFilename = file.getOriginalFilename();
         String storedFileName = UUID.randomUUID().toString() + "_" + originalFilename;
-
-        // 중요: "file:" 접두사를 제거해서 실제 경로인 "/app/upload/"로 만듭니다.
         String realPath = uploadPath.replace("file:", "");
 
         file.transferTo(new File(realPath + storedFileName));
+
+        Thumbnails.of(file.getInputStream())
+                .size(800, 800)
+                .outputQuality(0.75)
+                .toFile(new File(realPath + storedFileName));
 
         return storedFileName;
     }
