@@ -44,6 +44,11 @@ jobs:
           cd ~/community
           git fetch --all
           git reset --hard origin/main
+          
+          echo "MYSQL_URL=$MYSQL_URL" > .env
+          echo "MYSQL_USERNAME=$MYSQL_USERNAME" >> .env
+          echo "MYSQL_PASSWORD=$MYSQL_PASSWORD" >> .env
+          
           docker compose pull
           docker compose down
           docker compose up -d
