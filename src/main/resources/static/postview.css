@@ -145,13 +145,16 @@
         max-width: 600px;  /* 최대 너비 제한 */
         margin: 0 auto 20px auto;  /* 가운데 정렬 */
         text-align: center;
+        display: flex;          /* 추가 */
+        justify-content: center; /* 추가 */
     }
 
     .post-image img {
-        width: 100%;
+        width: auto;
+        max-width: 100%;
         height: auto;
-        max-height: 500px;  /* 최대 높이 제한 */
-        object-fit: contain;  /* 비율 유지하면서 크기 조절 */
+        max-height: 500px;
+        object-fit: contain;
         border: 1px solid #e0e0e0;
     }
 
