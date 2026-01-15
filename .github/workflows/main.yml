@@ -35,6 +35,7 @@ jobs:
         MYSQL_URL: ${{ secrets.MYSQL_URL }}
         MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
         MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+        FILE_UPLOAD_PATH: ${{ secrets.FILE_UPLOAD_PATH }}
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
@@ -48,6 +49,7 @@ jobs:
           echo "MYSQL_URL=$MYSQL_URL" > .env
           echo "MYSQL_USERNAME=$MYSQL_USERNAME" >> .env
           echo "MYSQL_PASSWORD=$MYSQL_PASSWORD" >> .env
+          echo "FILE_UPLOAD_PATH=file:/app/upload/" >> .env
           
           docker compose pull
           docker compose down
