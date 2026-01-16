@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PetLovers - 사용자 프로필</title>
+  <title>커뮤니티</title>
   <link rel="stylesheet" href="/nav.css">
   <link rel="stylesheet" href="/profile.css">
 </head>
@@ -12,174 +12,98 @@
 
   <main>
     <div class="container">
-      <!-- 프로필 카드 -->
-      <div class="profile-card" id="profileCard">
-        <div class="profile-header">
-          <div class="profile-image-container">
-            <div class="profile-image" id="profileImage">
-              🐾
-            </div>
-            <button class="camera-btn" onclick="document.getElementById('imageInput').click()">📷</button>
-            <input type="file" id="imageInput" class="hidden" accept="image/*" onchange="handleImageUpload(event)">
+
+      <div class="profile-card">
+        <div class="profile-image-section">
+          <img th:src="@{/upload/{image}(image=${profile != null && profile.profileImage != null ? profile.profileImage : 'default-profile.png'})}"
+               alt="프로필 이미지"
+               class="profile-image">
+        </div>
+        <div class="profile-info-section">
+          <div class="profile-username" th:text="${user.username}">사용자 이름</div>
+          <div class="profile-detail">
+            <span class="profile-detail-label">생년월일:</span>
+            <span th:text="${#temporals.format(user.userDate, 'yyyy년 MM월 dd일')}">1990년 01월 01일</span>
           </div>
-
-          <div class="profile-info">
-            <div class="profile-title">
-              <h1 class="username">PetLover123</h1>
-              <button class="follow-btn">팔로우</button>
-              <button class="save-btn" onclick="saveProfile()">저장하기</button>
+          <div class="profile-detail">
+            <span class="profile-detail-label">가입일:</span>
+            <span th:text="${#temporals.format(user.regDate, 'yyyy년 MM월 dd일')}">2024년 12월 21일</span>
+          </div>
+          <div class="profile-bio">
+            <div class="bio-label">자기소개</div>
+            <div class="bio-text" th:if="${profile != null && profile.bio != null && !profile.bio.isEmpty()}"
+                 th:text="${profile.bio}">
+              안녕하세요! 강아지를 사랑하는 집사입니다.
             </div>
-
-            <div class="stats">
-              <div class="stat-item">
-                <div class="stat-number">89</div>
-                <div class="stat-label">게시물</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-number">1,234</div>
-                <div class="stat-label">팔로워</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-number">567</div>
-                <div class="stat-label">팔로잉</div>
-              </div>
-            </div>
-
-            <div class="bio" id="bioText">
-              우리 강아지 몽이와 고양이 나비를 사랑하는 집사입니다! 🐕🐱 매일매일 행복한 순간들을 공유하고 있어요.
-            </div>
-            <textarea class="bio-textarea" id="bioTextarea" rows="4" placeholder="자기소개를 입력해주세요...">우리 강아지 몽이와 고양이 나비를 사랑하는 집사입니다! 🐕🐱 매일매일 행복한 순간들을 공유하고 있어요.</textarea>
-
-            <div class="profile-meta">
-              <div class="meta-item">
-                <span>📍</span>
-                <span>서울, 대한민국</span>
-              </div>
-              <div class="meta-item">
-                <span>📅</span>
-                <span>2024년 3월에 가입</span>
-              </div>
+            <div class="bio-text bio-empty" th:if="${profile == null || profile.bio == null || profile.bio.isEmpty()}">
+              자기소개가 없습니다.
             </div>
           </div>
         </div>
       </div>
 
-      <!-- 갤러리 카드 -->
-      <div class="gallery-card">
-        <h2 class="gallery-title">❤️ 우리 아이들 갤러리</h2>
+      <!-- 내 게시글 섹션 -->
+      <div class="my-posts-section">
+        <div class="section-header">내가 쓴 게시글</div>
 
-        <div class="gallery-grid">
-          <div class="photo-item">
-            <img src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=300&h=300&fit=crop" alt="Pet photo">
-            <div class="photo-overlay">
-              <div class="photo-likes">❤️ 24</div>
+        <div class="post-list">
+          <div th:if="${posts != null && posts.totalElements > 0}">
+            <div th:each="post, iterStat : ${posts.content}" class="post-item" th:onclick="'location.href=\'/post/' + ${post.id} + '\''">
+              <span class="post-number" th:text="${posts.totalElements - (posts.number * posts.size) - iterStat.index}">1</span>
+              <div class="post-info">
+                <span class="post-category" th:text="${post.category}">자유</span>
+                <a class="post-title-text" th:href="@{'/post/' + ${post.id}}" th:text="${post.title}">게시글 제목</a>
+              </div>
+              <div class="post-meta">
+                <span class="post-date" th:text="${#temporals.format(post.createdAt, 'yyyy.MM.dd')}">2024.12.21</span>
+                <span class="post-views" th:text="'조회 ' + ${post.count}">조회 128</span>
+              </div>
             </div>
           </div>
 
-          <div class="photo-item">
-            <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=300&h=300&fit=crop" alt="Pet photo">
-            <div class="photo-overlay">
-              <div class="photo-likes">❤️ 18</div>
-            </div>
-          </div>
-
-          <div class="photo-item">
-            <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=300&h=300&fit=crop" alt="Pet photo">
-            <div class="photo-overlay">
-              <div class="photo-likes">❤️ 32</div>
-            </div>
-          </div>
-
-          <div class="photo-item">
-            <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=300&h=300&fit=crop" alt="Pet photo">
-            <div class="photo-overlay">
-              <div class="photo-likes">❤️ 45</div>
-            </div>
-          </div>
-
-          <div class="photo-item">
-            <img src="https://images.unsplash.com/photo-1574144611937-0df059b5ef3e?w=300&h=300&fit=crop" alt="Pet photo">
-            <div class="photo-overlay">
-              <div class="photo-likes">❤️ 28</div>
-            </div>
-          </div>
-
-          <div class="photo-item">
-            <img src="https://images.unsplash.com/photo-1596492784531-6e6eb5ea9993?w=300&h=300&fit=crop" alt="Pet photo">
-            <div class="photo-overlay">
-              <div class="photo-likes">❤️ 19</div>
-            </div>
+          <div th:if="${posts == null || posts.totalElements == 0}">
+            <p class="empty-message">작성한 게시글이 없습니다.</p>
           </div>
         </div>
 
-        <div class="load-more">
-          <button class="load-more-btn">더 많은 사진 보기 ➤</button>
+        <!-- 페이지네이션 -->
+        <div class="pagination" th:if="${posts != null and posts.totalPages > 0}">
+          <!-- 이전 버튼 -->
+          <button class="page-btn"
+                  th:if="${posts.number > 0}"
+                  th:onclick="'location.href=\'/profile?page=' + (${posts.number} - 1) + '&size=' + ${posts.size} + '\''">
+            이전
+          </button>
+
+          <!-- 페이지 번호 버튼 -->
+          <th:block th:each="i : ${#numbers.sequence(0, posts.totalPages - 1)}">
+            <button class="page-btn"
+                    th:classappend="${i == posts.number} ? 'active' : ''"
+                    th:onclick="'location.href=\'/profile?page=' + ${i} + '&size=' + ${posts.size} + '\''"
+                    th:text="${i + 1}">
+            </button>
+          </th:block>
+
+          <!-- 다음 버튼 -->
+          <button class="page-btn"
+                  th:if="${posts.number < posts.totalPages - 1}"
+                  th:onclick="'location.href=\'/profile?page=' + (${posts.number} + 1) + '&size=' + ${posts.size} + '\''">
+            다음
+          </button>
         </div>
       </div>
     </div>
-  </main> <!-- 🔥 여기 닫힘 추가됨 -->
+  </main>
 
   <script>
-    let isEditing = false;
-
-    function toggleEdit() {
-      isEditing = !isEditing;
-      const profileCard = document.getElementById('profileCard');
-
-      if (isEditing) {
-        profileCard.classList.add('editing');
-      } else {
-        profileCard.classList.remove('editing');
-        document.getElementById('bioTextarea').value = document.getElementById('bioText').textContent;
-      }
-    }
-
-    function saveProfile() {
-      const bioText = document.getElementById('bioTextarea').value;
-      document.getElementById('bioText').textContent = bioText;
-
-      console.log('Profile saved:', {
-        bio: bioText,
-        profileImage: document.getElementById('profileImage').innerHTML
-      });
-
-      toggleEdit();
-
-      alert('프로필이 성공적으로 업데이트되었습니다! 🎉');
-    }
-
-    function handleImageUpload(event) {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          document.getElementById('profileImage').innerHTML =
-            `<img src="${e.target.result}" alt="프로필 이미지">`;
-        };
-        reader.readAsDataURL(file);
-      }
-    }
-
-    function shareProfile() {
-      if (navigator.share) {
-        navigator.share({
-          title: 'PetLovers - PetLover123님의 프로필',
-          text: '우리 강아지 몽이와 고양이 나비를 사랑하는 집사의 프로필을 확인해보세요!',
-          url: window.location.href
+    // 페이지네이션
+    document.querySelectorAll('.page-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+            if (!isNaN(this.textContent)) {
+                this.classList.add('active');
+            }
         });
-      } else {
-        navigator.clipboard.writeText(window.location.href);
-        alert('프로필 링크가 클립보드에 복사되었습니다!');
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-      const photoItems = document.querySelectorAll('.photo-item');
-      photoItems.forEach(item => {
-        item.addEventListener('click', function() {
-          console.log('Photo clicked');
-        });
-      });
     });
   </script>
 </body>

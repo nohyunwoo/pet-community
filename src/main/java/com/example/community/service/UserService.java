@@ -1,6 +1,7 @@
 package com.example.community.service;
 
 import com.example.community.dto.UserRequestDTO;
+import com.example.community.entity.Profile;
 import com.example.community.entity.User;
 import com.example.community.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,12 @@ public class UserService {
                 .sex(userRequestDTO.getSex())
                 .userDate(userRequestDTO.getUserDate())
                 .build();
+
+        Profile profile = new Profile();
+        profile.setBio("안녕하세요"+ user.getUsername() + "입니다. 잘 부탁드려요!!");
+
+        profile.setUser(user);
+        user.setProfile(profile);
 
         userRepository.save(user);
     }

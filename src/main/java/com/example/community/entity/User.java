@@ -37,6 +37,9 @@ public class User {
     @Column(name="reg_date", nullable = false)
     private LocalDate regDate;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Profile profile;
+
     @PrePersist
     public void prePersist(){
         this.regDate = LocalDate.now();
