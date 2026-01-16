@@ -28,11 +28,7 @@ public class MyUserDetailService implements UserDetailsService {
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
         return new CustomUserDetails(
-                user.getUserId(),
-                user.getPassword(),
-                authorities,
-                user.getUsername(),
-                user.getId()
-        );
+                user,
+                authorities);
     }
 }
