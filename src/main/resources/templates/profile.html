@@ -15,7 +15,9 @@
 
       <div class="profile-card">
         <div class="profile-image-section">
-          <img th:src="@{/upload/{image}(image=${profile != null && profile.profileImage != null ? profile.profileImage : 'default-profile.png'})}"
+          <img th:src="${profile.profileImage == 'default-profile.png'}
+               ? @{/images/default-profile.png}
+               : @{/upload/} + ${profile.profileImage}"
                alt="프로필 이미지"
                class="profile-image">
         </div>
