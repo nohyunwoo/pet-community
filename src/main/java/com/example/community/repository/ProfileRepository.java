@@ -10,5 +10,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
-    Page<Post> findPostsByUserId(String userId, Pageable pageable);
+    Page<Post> findPostsByUser_UserId(String userId, Pageable pageable);
 }
