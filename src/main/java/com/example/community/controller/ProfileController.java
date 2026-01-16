@@ -28,7 +28,7 @@ public class ProfileController {
 
         User loggedUser = customUserDetails.getUser();
         Profile loggedUserProfile = loggedUser.getProfile();
-        Page<Post> savedMyPosts = profileRepository.findPostsByUserId(loggedUser.getUserId(), pageable);
+        Page<Post> savedMyPosts = profileRepository.findByUserId(loggedUser.getUserId(), pageable);
 
         model.addAttribute("user", loggedUser);
         model.addAttribute("profile", loggedUserProfile);
