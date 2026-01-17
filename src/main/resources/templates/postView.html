@@ -101,6 +101,15 @@
                 },
                 body: `postId=${postId}`
             })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        alert("⚠️ " + data.message);
+                        throw new Error(data.message);
+                    });
+                }
+                return response;
+            )}
             .then(() => {
                 return fetch(`/like/count?postId=${postId}`);
             })
@@ -111,6 +120,36 @@
             .catch(err => {
                 console.error('에러 발생:', err);
             });
+        });
+        const commentForm = document.querySelector('form[action="/comment"]');
+
+        commentForm.addEventListener('submit', function(e) {
+            e.preventDefault(); // 1. 페이지 이동(새로고침)을 막습니다.
+
+            const formData = new FormData(this);
+            const params = new URLSearchParams(formData);
+
+            // 2. 서버로 데이터를 보냅니다.
+            fetch('/comment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params
+            })
+            .then(response => {
+                if (!response.ok) {
+                    // 서버의 글로벌 핸들러가 보낸 JSON 에러를 읽습니다.
+                    return response.json().then(data => {
+                        alert("⚠️ " + data.message); // 우리가 원하는 작은 알림!
+                        throw new Error(data.message);
+                    });
+                }
+                return response;
+            })
+            .then(() => {
+                alert("✅ 댓글이 등록되었습니다.");
+                location.reload(); // 성공했을 때만 깔끔하게 새로고침
+            })
+            .catch(err => console.error('에러:', err));
         });
     </script>
 </body>

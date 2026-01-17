@@ -1,10 +1,12 @@
 package com.example.community.exception;
 
 import com.example.community.dto.ErrorResponseDTO; // 패키지 경로 확인!
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.ModelAndView;
 
 @Slf4j
 @RestControllerAdvice
@@ -21,11 +23,21 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    protected ResponseEntity<ErrorResponseDTO> handleException(Exception e) {
+    protected Object handleException(Exception e, HttpServletRequest request) {
         log.error("서버 내부 에러 발생: ", e);
 
-        return ResponseEntity
-                .status(500)
-                .body(new ErrorResponseDTO("COMMON-001", "서버 내부 에러가 발생했습니다."));
+
+        String accept = request.getHeader("Accept");
+
+        if (accept != null && accept.contains("text/html")) {
+            ModelAndView mav = new ModelAndView();
+            mav.setViewName("500");
+            return mav;
+        }
+
+            ErrorCode errorCode = ErrorCode.SERVER_ERROR;
+            return ResponseEntity
+                    .status(errorCode.getStatus())
+                    .body(new ErrorResponseDTO(errorCode.getCode(), errorCode.getMessage()));
     }
 }
