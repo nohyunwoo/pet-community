@@ -13,19 +13,18 @@ import org.springframework.web.servlet.ModelAndView;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
-    protected ResponseEntity<ErrorResponseDTO> handleCustomException(CustomException e) {
-        log.error("서버 내부 에러 발생: ", e);
-
-        ErrorCode errorCode = e.getErrorCode();
-        return ResponseEntity
-                .status(errorCode.getStatus())
-                .body(ErrorResponseDTO.from(errorCode));
+    protected Object handleCustomException(CustomException e, HttpServletRequest request) {
+        log.error("비즈니스 예외 발생: {}", e.getErrorCode().getMessage());
+        return renderErrorResponse(e.getErrorCode(), request);
     }
 
     @ExceptionHandler(Exception.class)
     protected Object handleException(Exception e, HttpServletRequest request) {
-        log.error("서버 내부 에러 발생: ", e);
+        log.error("시스템 내부 에러 발생: ", e);
+        return renderErrorResponse(ErrorCode.SERVER_ERROR, request);
+    }
 
+    private Object renderErrorResponse(ErrorCode errorCode, HttpServletRequest request) {
         String accept = request.getHeader("Accept");
         String requestedWith = request.getHeader("X-Requested-With");
 
@@ -35,12 +34,12 @@ public class GlobalExceptionHandler {
         if (!isAjax && accept != null && accept.contains("text/html")) {
             ModelAndView mav = new ModelAndView();
             mav.setViewName("500");
+            mav.addObject("errorCode", errorCode);
             return mav;
         }
 
-            ErrorCode errorCode = ErrorCode.SERVER_ERROR;
-            return ResponseEntity
-                    .status(errorCode.getStatus())
-                    .body(new ErrorResponseDTO(errorCode.getCode(), errorCode.getMessage()));
+        return ResponseEntity
+                .status(errorCode.getStatus())
+                .body(ErrorResponseDTO.from(errorCode));
     }
 }

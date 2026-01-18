@@ -3,7 +3,8 @@ package com.example.community.service;
 import com.example.community.dto.PostRequestDTO;
 import com.example.community.entity.Post;
 import com.example.community.entity.User;
-import com.example.community.exception.PostNotFoundException;
+import com.example.community.exception.CustomException;
+import com.example.community.exception.ErrorCode;
 import com.example.community.repository.PostRepository;
 import com.example.community.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +49,7 @@ public class PostService {
         Optional<Post> optionPost = postRepository.findById(id);
 
         if(optionPost.isEmpty()){
-            throw new PostNotFoundException("해당 게시글이 없습니다. id=" + id);
+            throw new CustomException(ErrorCode.POST_NOT_FOUND);
         }
 
         Post post = optionPost.get();

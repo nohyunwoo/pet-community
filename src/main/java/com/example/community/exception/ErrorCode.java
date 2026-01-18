@@ -10,7 +10,14 @@ public enum ErrorCode {
 
     FORBIDDEN(403, "AUTH-002", "해당 요청에 권한이 없습니다."),
     ACCESS_DENIED(403, "AUTH-003", "접근 권한이 없습니다."),
-    SERVER_ERROR(403, "AUTH-003", "접근 권한이 없습니다.");
+
+
+    USER_NOT_FOUND(404, "U-001", "사용자를 찾을 수 없습니다."),
+
+    POST_NOT_FOUND(404, "P-001", "게시글을 찾을 수 없습니다."),
+
+    COMMENT_SAVE_FAILED(500, "CM-001", "댓글 저장 중 오류가 발생했습니다."),
+    SERVER_ERROR(500, "C-003", "서버 내부 에러가 발생했습니다.");
 
     private final int status;
     private final String code;
