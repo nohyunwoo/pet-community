@@ -29,7 +29,7 @@ public class CommentService {
     public void saveComment(CommentRequestDTO commentRequestDTO, String username, Long postId){
         Post post = postRepository.findById(postId).orElseThrow(()
                 -> new CustomException(ErrorCode.POST_NOT_FOUND));
-        User user = userRepository.findByUsername(username).orElseThrow(()
+        User user = userRepository.findByUserId(username).orElseThrow(()
                 -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         Comment comment = new Comment();
