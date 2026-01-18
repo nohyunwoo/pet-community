@@ -26,10 +26,13 @@ public class GlobalExceptionHandler {
     protected Object handleException(Exception e, HttpServletRequest request) {
         log.error("서버 내부 에러 발생: ", e);
 
-
         String accept = request.getHeader("Accept");
+        String requestedWith = request.getHeader("X-Requested-With");
 
-        if (accept != null && accept.contains("text/html")) {
+        boolean isAjax = (accept != null && accept.contains("application/json"))
+                || "XMLHttpRequest".equals(requestedWith);
+
+        if (!isAjax && accept != null && accept.contains("text/html")) {
             ModelAndView mav = new ModelAndView();
             mav.setViewName("500");
             return mav;
