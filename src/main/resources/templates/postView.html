@@ -109,7 +109,7 @@
                     });
                 }
                 return response;
-            )}
+            })
             .then(() => {
                 return fetch(`/like/count?postId=${postId}`);
             })
