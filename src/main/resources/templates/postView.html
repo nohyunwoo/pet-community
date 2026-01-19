@@ -66,7 +66,7 @@
                     <div class="comment-item" th:each="comment : ${comments}">
                         <div class="comment-header">
                             <div class="comment-author-info">
-                                <span class="comment-author-name" th:text="${comment.user.username}">냥이사랑</span>
+                                <span class="comment-author-name" th:text="${comment.username}">냥이사랑</span>
                                 <span class="comment-date" th:text="${@timeAgo.format(comment.createdAt)}">1시간 전</span>
                             </div>
                         </div>
