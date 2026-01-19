@@ -1,5 +1,6 @@
 package com.example.community.entity;
 
+import com.example.community.dto.Comment.CommentRequestDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,4 +35,11 @@ public class Comment {
         this.createdAt = LocalDateTime.now();
     }
 
+    public static Comment createComment(CommentRequestDTO dto, Post post, User user){
+        Comment comment = new Comment();
+        comment.setContent(dto.getContent());
+        comment.setPost(post);
+        comment.setUser(user);
+        return comment;
+    }
 }

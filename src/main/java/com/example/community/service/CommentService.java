@@ -1,6 +1,7 @@
 package com.example.community.service;
 
-import com.example.community.dto.CommentRequestDTO;
+import com.example.community.dto.Comment.CommentRequestDTO;
+import com.example.community.dto.Comment.CommentResponseDTO;
 import com.example.community.entity.Comment;
 import com.example.community.entity.Post;
 import com.example.community.entity.User;
@@ -32,11 +33,7 @@ public class CommentService {
         User user = userRepository.findByUserId(username).orElseThrow(()
                 -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        Comment comment = new Comment();
-
-        comment.setContent(commentRequestDTO.getContent());
-        comment.setPost(post);
-        comment.setUser(user);
+        Comment comment = Comment.createComment(commentRequestDTO, post, user);
 
         try{
             commentRepository.save(comment);
@@ -48,9 +45,10 @@ public class CommentService {
     }
 
     @Transactional
-    public List<Comment> getCommentByPostId(Long id){
-        List<Comment> comments = commentRepository.findAllWithUserByPostId(id);
-        return comments;
+    public List<CommentResponseDTO> getCommentByPostId(Long id){
+        return commentRepository.findAllWithUserByPostId(id).stream()
+                .map(CommentResponseDTO::from)
+                .toList();
     }
 
     public long getCount(Long id){

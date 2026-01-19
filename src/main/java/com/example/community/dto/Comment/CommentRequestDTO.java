@@ -1,4 +1,4 @@
-package com.example.community.dto;
+package com.example.community.dto.Comment;
 
 import lombok.Getter;
 import lombok.Setter;

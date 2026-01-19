@@ -1,5 +1,6 @@
 package com.example.community.controller;
 
+import com.example.community.dto.Comment.CommentResponseDTO;
 import com.example.community.dto.PostRequestDTO;
 import com.example.community.entity.Comment;
 import com.example.community.entity.Post;
@@ -63,7 +64,7 @@ public class PostController {
     @GetMapping("/post/{id}")
     public String viewPost(@PathVariable Long id, Model model) {
         Post post = postService.findByIdAndIncreaseCount(id);
-        List<Comment> commentByPostId = commentService.getCommentByPostId(id);
+        List<CommentResponseDTO> commentByPostId = commentService.getCommentByPostId(id);
         long count = commentService.getCount(id);
         Long likeCount = likeService.getLikeCount(id);
 
