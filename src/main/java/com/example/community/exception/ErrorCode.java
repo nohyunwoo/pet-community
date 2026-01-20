@@ -10,6 +10,7 @@ public enum ErrorCode {
 
     FORBIDDEN(403, "AUTH-002", "해당 요청에 권한이 없습니다."),
     ACCESS_DENIED(403, "AUTH-003", "접근 권한이 없습니다."),
+    USERID_NOT_FOUND(403, "AUTH-004", "아이디가 존재하지 않습니다."),
 
 
     USER_NOT_FOUND(404, "U-001", "사용자를 찾을 수 없습니다."),

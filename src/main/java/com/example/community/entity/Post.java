@@ -10,7 +10,9 @@ import java.time.LocalDateTime;
 @ToString(exclude = "user")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Post {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

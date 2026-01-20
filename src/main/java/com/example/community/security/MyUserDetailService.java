@@ -1,6 +1,7 @@
 package com.example.community.security;
 
 import com.example.community.entity.User;
+import com.example.community.exception.ErrorCode;
 import com.example.community.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,7 +23,7 @@ public class MyUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException{
         User user = userRepository.findByUserId(userId).orElseThrow(() ->
-                new UsernameNotFoundException("아이디가 존재하지 않습니다."));
+                new UsernameNotFoundException(ErrorCode.USERID_NOT_FOUND.getMessage()));
 
         ArrayList<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));

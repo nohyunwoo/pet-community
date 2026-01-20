@@ -1,6 +1,7 @@
 package com.example.community.dto;
 
 import com.example.community.entity.Post;
+import com.example.community.entity.User;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,8 +16,14 @@ public class PostRequestDTO {
 
     private MultipartFile imageFile;
 
-    public PostRequestDTO(String title, String content) {
-        this.title = title;
-        this.content = content;
+    public Post from(User user, String storedName, String originalName) {
+        return Post.builder()
+                .category(this.category)
+                .title(this.title)
+                .content(this.content)
+                .user(user)
+                .originalFileName(originalName)
+                .storedFileName(storedName)
+                .build();
     }
 }

@@ -2,7 +2,6 @@ package com.example.community.controller;
 
 import com.example.community.dto.Comment.CommentResponseDTO;
 import com.example.community.dto.PostRequestDTO;
-import com.example.community.entity.Comment;
 import com.example.community.entity.Post;
 import com.example.community.security.CustomUserDetails;
 import com.example.community.service.CommentService;

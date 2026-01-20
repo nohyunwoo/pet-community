@@ -1,6 +1,6 @@
 package com.example.community.exception;
 
-import com.example.community.dto.ErrorResponseDTO; // 패키지 경로 확인!
+import com.example.community.dto.ErrorResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

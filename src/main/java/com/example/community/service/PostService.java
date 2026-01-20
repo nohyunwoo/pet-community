@@ -6,7 +6,6 @@ import com.example.community.entity.User;
 import com.example.community.exception.CustomException;
 import com.example.community.exception.ErrorCode;
 import com.example.community.repository.PostRepository;
-import com.example.community.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +20,6 @@ import java.util.Optional;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
     private final FileService fileService;
     private final UserService userService;
 
@@ -31,16 +29,7 @@ public class PostService {
 
         String storedName = fileService.storeFile(dto.getImageFile());
         String originalName = (dto.getImageFile() != null) ? dto.getImageFile().getOriginalFilename() : null;
-
-        Post post = new Post();
-        post.setCategory(dto.getCategory());
-        post.setTitle(dto.getTitle());
-        post.setContent(dto.getContent());
-        post.setUser(user);
-
-        post.setOriginalFileName(originalName);
-        post.setStoredFileName(storedName);
-
+        Post post = dto.from(user, storedName, originalName);
         postRepository.save(post);
     }
 
