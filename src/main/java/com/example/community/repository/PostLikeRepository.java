@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface PostLikeRepository extends JpaRepository<Post_like, Long> {
 
-    Long countByPost(Post post);
+    Long countByPostId(Long postId);
     Optional<Post_like> findByPost(Post post);
 }
