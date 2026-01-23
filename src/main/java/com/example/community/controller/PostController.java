@@ -3,6 +3,9 @@ package com.example.community.controller;
 import com.example.community.dto.Comment.CommentResponseDTO;
 import com.example.community.dto.PostRequestDTO;
 import com.example.community.entity.Post;
+import com.example.community.exception.CustomException;
+import com.example.community.exception.ErrorCode;
+import com.example.community.repository.PostRepository;
 import com.example.community.security.CustomUserDetails;
 import com.example.community.service.CommentService;
 import com.example.community.service.LikeService;
@@ -19,13 +22,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
+    private final PostRepository postRepository;
     private final CommentService commentService;
     private final LikeService likeService;
 
@@ -73,6 +76,21 @@ public class PostController {
         model.addAttribute("likeCount", likeCount);
         return "postView";
     }
+
+    @GetMapping("/post/{id}/edit")
+    public String ModifyPost(@PathVariable Long id, Model model){
+        Post post = postRepository.findById(id).orElseThrow(()
+                -> new CustomException(ErrorCode.POST_NOT_FOUND));
+        model.addAttribute("post", post);
+        return "post";
+    }
+
+    @PostMapping("/post/{id}/edit")
+    public String saveModifyPost(@PathVariable Long id, @ModelAttribute PostRequestDTO dto){
+        postService.savePost(dto, id);
+        return "redirect:/post/" + id;
+    }
+
 
     @GetMapping("/like/count")
     public ResponseEntity<Long> count(@RequestParam Long postId) {

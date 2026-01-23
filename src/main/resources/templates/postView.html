@@ -24,8 +24,10 @@
                     <input type="hidden" name="postId" th:value="${post.id}" />
                     <div class="post-actions">
                         <button class="action-btn like-btn" th:attr="data-post-id=${post.id}">👍 좋아요</button>
-                        <button class="action-btn">📱 공유</button>
-                        <button class="action-btn">⚠️ 신고</button>
+                        <th:block th:if="${#authentication.name == post.user.username}">
+                            <a th:href="@{/post/{id}/edit(id=${post.id})}" class="action-btn edit-btn">✏️ 수정</a>
+                            <button class="action-btn delete-btn" th:onclick="|deletePost(${post.id})|">🗑️ 삭제</button>
+                        </th:block>
                     </div>
                 </div>
 

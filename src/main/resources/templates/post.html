@@ -16,44 +16,51 @@
       <div class="page-subtitle">자유롭게 여러분의 이야기를 들려주세요</div>
     </div>
 
-    <form action="/post" method="post" class="write-form" enctype="multipart/form-data">
+    <form th:action="${post?.id == null} ? @{/post} : @{|/post/${post.id}/edit|}"
+          method="post" class="write-form" enctype="multipart/form-data">
+
       <div class="form-group required">
         <label for="category">카테고리</label>
         <select name="category" id="category" class="form-control" required>
-          <option value="">카테고리를 선택하세요</option>
-          <option value="자유">자유게시판</option>
-          <option value="질문">질문</option>
-          <option value="가입인사">가입인사</option>
+          <option value="" th:selected="${post?.category == null}">카테고리를 선택하세요</option>
+          <option value="자유" th:selected="${post?.category == '자유'}">자유게시판</option>
+          <option value="질문" th:selected="${post?.category == '질문'}">질문</option>
+          <option value="가입인사" th:selected="${post?.category == '가입인사'}">가입인사</option>
         </select>
       </div>
 
       <div class="form-group required">
         <label for="title">제목</label>
         <input name="title" type="text" id="title" class="form-control"
-               placeholder="제목을 입력하세요" required maxlength="100">
-        <div class="char-counter" id="titleCounter">0 / 100</div>
+               th:value="${post?.title}" placeholder="제목을 입력하세요" required maxlength="100">
+        <div class="char-counter" id="titleCounter" th:text="${post?.title != null ? post.title.length() + ' / 100' : '0 / 100'}">0 / 100</div>
       </div>
 
       <div class="form-group required">
         <label for="content">내용</label>
         <textarea name="content" id="content" class="form-control"
-                  placeholder="내용을 입력하세요" required maxlength="5000"></textarea>
-        <div class="char-counter" id="contentCounter">0 / 5000</div>
+                  th:text="${post?.content}" placeholder="내용을 입력하세요" required maxlength="5000"></textarea>
+        <div class="char-counter" id="contentCounter" th:text="${post?.content != null ? post.content.length() + ' / 5000' : '0 / 5000'}">0 / 5000</div>
+      </div>
+
+      <div class="form-group" th:if="${post?.id != null and post.imagePath != null}">
+        <label>기존 첨부 이미지</label>
+        <div style="margin-bottom: 10px;">
+          <img th:src="${post.imagePath}" alt="기존 이미지" style="max-width: 200px; border-radius: 4px;">
+          <p style="font-size: 12px; color: #666;">* 새로운 파일을 선택하면 기존 이미지가 교체됩니다.</p>
+        </div>
       </div>
 
       <div class="form-group">
         <label for="imageFile">사진 첨부</label>
         <input type="file" id="imageFile" name="imageFile" class="form-control"
                accept="image/*" style="padding: 8px;">
-        <div style="font-size: 12px; color: #999; margin-top: 5px;">
-          jpg, png, gif 파일만 가능 (최대 5MB)
-        </div>
         <div id="imagePreview" style="margin-top: 10px;"></div>
       </div>
 
       <div class="form-actions">
         <button type="button" class="btn btn-secondary" onclick="goBack()">취소</button>
-        <button type="submit" class="btn btn-primary">게시글 등록</button>
+        <button type="submit" class="btn btn-primary" th:text="${post?.id == null} ? '게시글 등록' : '수정 완료'">게시글 등록</button>
       </div>
     </form>
   </div>
@@ -159,6 +166,15 @@
             return false;
         }
     });
+
+    window.onload = function() {
+        // 페이지 로드 시 기존 제목/내용이 있다면 카운터 업데이트
+        const titleInput = document.getElementById('title');
+        const contentInput = document.getElementById('content');
+
+        if (titleInput.value) updateCharCounter(titleInput, 'titleCounter', 100);
+        if (contentInput.value) updateCharCounter(contentInput, 'contentCounter', 5000);
+    };
   </script>
 </body>
 </html>

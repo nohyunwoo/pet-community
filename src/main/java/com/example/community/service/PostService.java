@@ -7,6 +7,7 @@ import com.example.community.exception.CustomException;
 import com.example.community.exception.ErrorCode;
 import com.example.community.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PostService {
@@ -24,13 +26,18 @@ public class PostService {
     private final UserService userService;
 
     @Transactional
-    public void savePost(PostRequestDTO dto, Long id) throws IOException {
-        User user = userService.existUserId(id);
+    public void savePost(PostRequestDTO dto, Long id){
+        try{
+            User user = userService.existUserId(id);
 
-        String storedName = fileService.storeFile(dto.getImageFile());
-        String originalName = (dto.getImageFile() != null) ? dto.getImageFile().getOriginalFilename() : null;
-        Post post = dto.from(user, storedName, originalName);
-        postRepository.save(post);
+            String storedName = fileService.storeFile(dto.getImageFile());
+            String originalName = (dto.getImageFile() != null) ? dto.getImageFile().getOriginalFilename() : null;
+            Post post = dto.from(user, storedName, originalName);
+            postRepository.save(post);
+        }
+        catch(IOException e){
+            log.error("게시글 저장 중 문제가 발생했습니다.");
+        }
     }
 
     @Transactional
