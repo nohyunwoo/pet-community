@@ -26,18 +26,29 @@ public class PostService {
     private final UserService userService;
 
     @Transactional
-    public void savePost(PostRequestDTO dto, Long id){
-        try{
-            User user = userService.existUserId(id);
+    public void createPost(PostRequestDTO dto, Long id) throws IOException{
+        User user = userService.existUserId(id);
 
+        String storedName = fileService.storeFile(dto.getImageFile());
+        String originalName = (dto.getImageFile() != null) ? dto.getImageFile().getOriginalFilename() : null;
+        Post post = dto.from(user, storedName, originalName);
+        postRepository.save(post);
+    }
+    @Transactional
+    public void updatePost(PostRequestDTO dto, Long id) throws IOException{
+        Post post = postRepository.findById(id).orElseThrow(() ->
+                new CustomException(ErrorCode.POST_NOT_FOUND));
+
+        if(dto.getImageFile() != null && !dto.getImageFile().isEmpty()){
+            if(post.getStoredFileName() != null){
+                fileService.deleteFile(post.getStoredFileName());
+            }
             String storedName = fileService.storeFile(dto.getImageFile());
-            String originalName = (dto.getImageFile() != null) ? dto.getImageFile().getOriginalFilename() : null;
-            Post post = dto.from(user, storedName, originalName);
-            postRepository.save(post);
+            post.setStoredFileName(storedName);
+            post.setOriginalFileName(dto.getImageFile().getOriginalFilename());
         }
-        catch(IOException e){
-            log.error("게시글 저장 중 문제가 발생했습니다.");
-        }
+
+        post.update(dto.getTitle(), dto.getContent(), dto.getCategory());
     }
 
     @Transactional

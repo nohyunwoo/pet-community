@@ -47,4 +47,10 @@ public class Post {
     public void increaseCount(){
         this.count++;
     }
+
+    public void update(String title, String content, String category) {
+        this.title = title;
+        this.content = content;
+        this.category = category;
+    }
 }

@@ -11,6 +11,7 @@ import com.example.community.service.CommentService;
 import com.example.community.service.LikeService;
 import com.example.community.service.PostService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class PostController {
@@ -52,7 +54,7 @@ public class PostController {
     @PostMapping("/post")
     public String savePost(@ModelAttribute PostRequestDTO postRequestDTO,
                            @AuthenticationPrincipal CustomUserDetails customUserDetails) throws IOException {
-        postService.savePost(postRequestDTO, customUserDetails.getId());
+        postService.createPost(postRequestDTO, customUserDetails.getId());
         return "redirect:/board";
     }
 
@@ -87,7 +89,11 @@ public class PostController {
 
     @PostMapping("/post/{id}/edit")
     public String saveModifyPost(@PathVariable Long id, @ModelAttribute PostRequestDTO dto){
-        postService.savePost(dto, id);
+        try{
+            postService.updatePost(dto, id);
+        }catch(IOException e){
+            log.error("게시글 업데이트 실패: {}", e.getMessage());
+        }
         return "redirect:/post/" + id;
     }
 
