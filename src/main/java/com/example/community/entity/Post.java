@@ -31,6 +31,7 @@ public class Post {
     @JoinColumn(name="user_id", referencedColumnName = "id")
     private User user;
 
+    @Builder.Default
     private Long count = 0L;
 
     private LocalDateTime createdAt;
