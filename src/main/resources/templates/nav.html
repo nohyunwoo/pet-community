@@ -2,8 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <div th:fragment="navbar">
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <th:block th:if="${_csrf}">
+        <meta name="_csrf" th:content="${_csrf.token}"/>
+        <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    </th:block>
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">🐾 펫니쉬</div>
@@ -14,7 +16,11 @@
             </ul>
             <ul class="auth-menu">
                 <li th:if="${#authorization.expression('isAuthenticated()')}">
-                    <a href="/logout">로그아웃</a>
+                    <form th:action="@{/logout}" method="post" style="display: inline;">
+                        <button type="submit" style="background:none; border:none; color:inherit; cursor:pointer;">
+                            로그아웃
+                        </button>
+                    </form>
                 </li>
                 <li th:unless="${#authorization.expression('isAuthenticated()')}">
                     <a href="/login">로그인</a>
