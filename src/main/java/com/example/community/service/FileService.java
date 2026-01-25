@@ -1,5 +1,7 @@
 package com.example.community.service;
 
+import com.example.community.exception.CustomException;
+import com.example.community.exception.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,19 +26,22 @@ public class FileService {
 
         String contentType = file.getContentType();
         if (contentType == null || !contentType.startsWith("image/")) {
-            throw new IllegalArgumentException("이미지 파일만 업로드 가능합니다.");
+            throw new CustomException(ErrorCode.IMAGES_PROCESS_ERROR);
         }
 
         String originalFilename = file.getOriginalFilename();
         String storedFileName = UUID.randomUUID().toString() + "_" + originalFilename;
         String realPath = getRealPath();
 
-        file.transferTo(new File(realPath + storedFileName));
-
-        Thumbnails.of(file.getInputStream())
-                .size(800, 800)
-                .outputQuality(0.75)
-                .toFile(new File(realPath + storedFileName));
+        try {
+            Thumbnails.of(file.getInputStream())
+                    .size(800, 800)
+                    .outputQuality(0.75)
+                    .outputFormat("jpg")
+                    .toFile(new File(realPath + storedFileName));
+        } catch (IOException e) {
+            throw new CustomException(ErrorCode.IMAGE_SIZE_EXCEEDED);
+        }
 
         return storedFileName;
     }

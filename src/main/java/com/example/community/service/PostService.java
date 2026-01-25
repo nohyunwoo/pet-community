@@ -34,6 +34,7 @@ public class PostService {
         Post post = dto.from(user, storedName, originalName);
         postRepository.save(post);
     }
+
     @Transactional
     public void updatePost(PostRequestDTO dto, Long id) throws IOException{
         Post post = postRepository.findById(id).orElseThrow(() ->
@@ -49,6 +50,11 @@ public class PostService {
         }
 
         post.update(dto.getTitle(), dto.getContent(), dto.getCategory());
+    }
+
+    @Transactional
+    public void deletePost(){
+
     }
 
     @Transactional
