@@ -31,3 +31,9 @@ docker-compose.override.yml
 .DS_Store
 Thumbs.db
 desktop.ini
+
+### SSL Certificates ###
+*.pem
+*.key
+nginx/cert.pem
+nginx/key.pem

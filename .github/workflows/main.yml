@@ -36,15 +36,20 @@ jobs:
         MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
         MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
         FILE_UPLOAD_PATH: ${{ secrets.FILE_UPLOAD_PATH }}
+        SSL_CERT: ${{ secrets.SSL_CERT }}
+        SSL_KEY: ${{ secrets.SSL_KEY }}
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_SSH_KEY }}
-        envs: MYSQL_URL, MYSQL_USERNAME, MYSQL_PASSWORD
+        envs: MYSQL_URL, MYSQL_USERNAME, MYSQL_PASSWORD, SSL_CERT, SSL_KEY
         script: |
           cd ~/community
           git fetch --all
           git reset --hard origin/main
+          
+          echo "$SSL_CERT" > ./nginx/cert.pem
+          echo "$SSL_KEY" > ./nginx/key.pem
           
           echo "MYSQL_URL=$MYSQL_URL" > .env
           echo "MYSQL_USERNAME=$MYSQL_USERNAME" >> .env
