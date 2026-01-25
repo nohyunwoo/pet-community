@@ -44,9 +44,20 @@ public class SecurityConfig {
     }
 
     @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring()
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+                .requestMatchers("/css/**", "/js/**", "/images/**", "/*.css", "/*.js", "/banner.jpg", "/favicon.ico"); // 직접 쓰시는 파일들
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 
-//        http.csrf(csrf -> csrf.disable());
+        http.csrf(csrf -> csrf
+                .ignoringRequestMatchers("/css/**", "/js/**", "/images/**", 
+                                       "/*.css", "/*.js", "/*.jpg", "/*.png", 
+                                       "/*.jpeg", "/*.gif", "/*.ico", "/banner.jpg", "/favicon.ico")
+        );
 
         http.authorizeHttpRequests(authorize ->
                 authorize
@@ -80,12 +91,5 @@ public class SecurityConfig {
                     .permitAll()
     );
         return http.build();
-    }
-
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring()
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-                .requestMatchers("/css/**", "/js/**", "/images/**", "/*.css", "/*.js", "/banner.jpg", "/favicon.ico"); // 직접 쓰시는 파일들
     }
 }
