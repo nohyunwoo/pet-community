@@ -44,7 +44,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 
-        http.csrf(csrf -> csrf.disable());
+//        http.csrf(csrf -> csrf.disable());
 
         http.authorizeHttpRequests(authorize ->
                 authorize
@@ -57,7 +57,6 @@ public class SecurityConfig {
                     .anyRequest().authenticated()
         );
 
-        // 2. [핵심] 예외 처리 핸들러를 시큐리티 필터 체인에 등록합니다.
         http.exceptionHandling(handler -> handler
                 .authenticationEntryPoint(customAuthenticationEntryPoint) // 401: 인증 실패 시 실행
                 .accessDeniedHandler(customAccessDeniedHandler)           // 403: 권한 부족 시 실행

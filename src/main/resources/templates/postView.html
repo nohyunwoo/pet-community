@@ -90,10 +90,14 @@
         document.querySelector('.like-btn').addEventListener('click', function () {
             const postId = this.getAttribute('data-post-id');
 
+            const header = document.querySelector('meta[name="_csrf_header"]').content;
+            const token = document.querySelector('meta[name="_csrf"]').content;
+
             fetch('/post-like', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    [header]: token
                 },
                 body: `postId=${postId}`
             })
@@ -125,10 +129,13 @@
             const formData = new FormData(this);
             const params = new URLSearchParams(formData);
 
+            const header = document.querySelector('meta[name="_csrf_header"]').content;
+            const token = document.querySelector('meta[name="_csrf"]').content;
+
             // 2. 서버로 데이터를 보냅니다.
             fetch('/comment', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json'},
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json', [header]: token},
                 body: params
             })
             .then(response => {
