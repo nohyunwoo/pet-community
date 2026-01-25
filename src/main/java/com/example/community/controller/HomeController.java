@@ -18,6 +18,11 @@ public class HomeController {
 
     private final HomeService homeService;
 
+    @GetMapping("/")
+    public String index() {
+        return "redirect:/home"; // 루트로 오면 홈으로 보내주는 설정이 필요할 수 있습니다.
+    }
+
     @GetMapping("/home")
     public String home(Model model, Authentication authentication){
 
