@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
   <title>커뮤니티</title>
   <link rel="stylesheet" href="/nav.css">
   <link rel="stylesheet" href="/post.css">
@@ -180,6 +182,29 @@
         if (titleInput.value) updateCharCounter(titleInput, 'titleCounter', 100);
         if (contentInput.value) updateCharCounter(contentInput, 'contentCounter', 5000);
     };
+
+    function deletePost(id) {
+        if (!confirm("정말 삭제하시겠습니까?")) return;
+
+        const header = document.querySelector('meta[name="_csrf_header"]').content;
+        const token = document.querySelector('meta[name="_csrf"]').content;
+
+        fetch(`/post/${id}`, {
+            method: 'DELETE',
+            headers: {
+            [header]: token
+        }
+        })
+        .then(response => {
+            if (response.ok) {
+                alert("삭제되었습니다!");
+                location.href = "/home";
+            } else {
+                alert("삭제 권한이 없습니다.");
+            }
+        });
+        .catch(error => console.error('Error:', error));
+    }
   </script>
 </body>
 </html>

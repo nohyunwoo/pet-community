@@ -6,6 +6,7 @@ import com.example.community.entity.User;
 import com.example.community.exception.CustomException;
 import com.example.community.exception.ErrorCode;
 import com.example.community.repository.PostRepository;
+import com.example.community.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -53,8 +54,14 @@ public class PostService {
     }
 
     @Transactional
-    public void deletePost(){
+    public void deletePost(Long id, String userId){
+        Post post = postRepository.findById(id).orElseThrow(()
+                -> new CustomException(ErrorCode.POST_NOT_FOUND));
+        if(!post.getUser().getUserId().equals(userId)){
+            throw new CustomException(ErrorCode.FORBIDDEN);
+        }
 
+        postRepository.delete(post);
     }
 
     @Transactional

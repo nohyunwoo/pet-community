@@ -97,6 +97,16 @@ public class PostController {
         return "redirect:/post/" + id;
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePost(
+            @PathVariable Long id,
+            @AuthenticationPrincipal CustomUserDetails customUserDetails)
+    {
+        postService.deletePost(id, customUserDetails.getUser().getUserId());
+
+        return ResponseEntity.ok().build();
+    }
+
 
     @GetMapping("/like/count")
     public ResponseEntity<Long> count(@RequestParam Long postId) {
