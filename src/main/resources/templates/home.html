@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>커뮤니티</title>
-    <link rel="stylesheet" href="/nav.css">
-    <link rel="stylesheet" href="/home.css">
+    <link rel="stylesheet" th:href="@{/css/nav.css}">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
 </head>
 <body>
     <div th:replace="~{nav :: navbar}"></div>
@@ -14,7 +14,7 @@
     <div class="container">
         <!-- 배너 이미지 영역 -->
         <div class="banner">
-            <img src="/banner.jpg" alt="애완동물 커뮤니티 배너" class="banner-image">
+            <img th:src="@{/images/banner.jpg}" alt="애완동물 커뮤니티 배너" class="banner-image">
         </div>
 
         <!-- 최신 게시물 -->

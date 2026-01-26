@@ -44,30 +44,18 @@ public class SecurityConfig {
     }
 
     @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring()
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-                .requestMatchers("/css/**", "/js/**", "/images/**", "/*.css", "/*.js", "/banner.jpg", "/favicon.ico"); // 직접 쓰시는 파일들
-    }
-
-    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 
         http.csrf(csrf -> csrf
-                .ignoringRequestMatchers("/css/**", "/js/**", "/images/**", 
-                                       "/*.css", "/*.js", "/*.jpg", "/*.png", 
-                                       "/*.jpeg", "/*.gif", "/*.ico", "/banner.jpg", "/favicon.ico")
-        );
+                        .ignoringRequestMatchers(PathRequest.toStaticResources().atCommonLocations())
+                );
 
         http.authorizeHttpRequests(authorize ->
                 authorize
-                    .requestMatchers("/", "/home", "/board/**", "/login", "/register", 
-                                   "/css/**", "/js/**", "/images/**",
-                                   "/*.css", "/*.js", "/*.jpg", "/*.png", "/*.jpeg", "/*.gif",
-                                   "/nav.css", "/home.css", "/board.css", "/post.css", "/postview.css", "/profile.css",
-                                   "/banner.jpg","/favicon.ico").permitAll()
-                                   
-                    .anyRequest().authenticated()
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+
+                        .requestMatchers("/", "/home", "/board/**", "/login", "/register").permitAll()
+                        .anyRequest().authenticated()
         );
 
         http.exceptionHandling(handler -> handler
