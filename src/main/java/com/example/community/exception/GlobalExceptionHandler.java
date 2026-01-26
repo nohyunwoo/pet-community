@@ -20,7 +20,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     protected Object handleException(Exception e, HttpServletRequest request) {
-        log.error("시스템 내부 에러 발생: ", e);
+        log.error(">>> [메서드 ERROR] URL: {}, Method: {}, Message: {}",
+                request.getRequestURI(), request.getMethod(), e.getMessage());
         return renderErrorResponse(ErrorCode.SERVER_ERROR, request);
     }
 

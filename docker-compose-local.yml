@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  # 1. MySQL (기존 설정 유지)
+  mysql:
+    image: mysql:8
+    container_name: local-mysql
+    ports:
+      - "3308:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_DATABASE=community
+    volumes:
+      - local-mysql-data:/var/lib/mysql
+
+  # 2. Redis (기존 설정 유지)
+  redis:
+    image: redis:latest
+    container_name: local-redis
+    ports:
+      - "6379:6379"
+
+  # 3. Nginx (추가)
+  nginx:
+    image: nginx:latest
+    container_name: local-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx-local.conf:/etc/nginx/nginx.conf:ro
+      # 배포 서버와 동일하게 파비콘 직접 연결 테스트
+      - ./src/main/resources/static/favicon.ico:/usr/share/nginx/html/favicon.ico:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway" # 도커 안에서 내 PC(IDE 앱)를 찾기 위한 주소
+
+volumes:
+  local-mysql-data:

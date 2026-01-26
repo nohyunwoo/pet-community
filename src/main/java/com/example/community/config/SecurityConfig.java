@@ -35,10 +35,8 @@ public class SecurityConfig {
     @Bean
     public AuthenticationFailureHandler failureHandler() {
         return (request, response, exception) -> {
-            // 필터 단계에서 발생하는 진짜 에러를 여기서 로그로 남깁니다!
             log.error(">>> [LOGIN ERROR] 로그인 실패 원인: {}", exception.getMessage());
 
-            // 로그를 남긴 후, 원래 설정했던 에러 페이지로 보냅니다.
             response.sendRedirect("/login?error=true");
         };
     }
