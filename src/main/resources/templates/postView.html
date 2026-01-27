@@ -54,7 +54,7 @@
                     💬 댓글 <span th:text="${count}">8</span>개
                 </div>
 
-                <form action="/comment" method="post">
+                <form th:action="@{/comment}" method="post">
                     <div class="comment-form">
                         <textarea name="content" class="comment-textarea" placeholder="댓글을 작성해보세요..." required></textarea>
                         <input name="postId" type="hidden" th:value="${post.id}" />
@@ -93,7 +93,7 @@
             const header = document.querySelector('meta[name="_csrf_header"]').content;
             const token = document.querySelector('meta[name="_csrf"]').content;
 
-            fetch('/post-like', {
+            fetch('/post/like', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -111,7 +111,7 @@
                 return response;
             })
             .then(() => {
-                return fetch(`/like/count?postId=${postId}`);
+                return fetch(`/post/like?postId=${postId}`);
             })
             .then(response => response.text())
             .then(likeCount => {
@@ -154,6 +154,34 @@
             })
             .catch(err => console.error('에러:', err));
         });
+
+        // post 삭제
+        function deletePost(id) {
+            if (!confirm("정말로 삭제하시겠습니까?")) return;
+
+                const token = document.querySelector('meta[name="_csrf"]').content;
+                const header = document.querySelector('meta[name="_csrf_header"]').content;
+
+                fetch(`/post/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        [header]: token,
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+            .then(response => {
+                if (response.ok) {
+                    alert("삭제되었습니다.");
+                    location.href = "/board";
+                } else if (response.status === 403) {
+                    alert("삭제 권한이 없습니다.");
+                } else {
+                    alert("삭제 실패: " + response.status);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
     </script>
 </body>
 </html>

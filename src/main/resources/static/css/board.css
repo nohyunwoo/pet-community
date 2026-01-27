@@ -11,21 +11,6 @@
         color: #000000;
     }
 
-    /* 상단 메뉴바 */
-    .navbar {
-        background-color: #ff6347;
-        padding: 0;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .nav-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
     .logo {
         padding: 15px 20px;
         font-size: 20px;
@@ -33,38 +18,10 @@
         color: #ffffff;
     }
 
-    .nav-menu {
-        display: flex;
-        list-style: none;
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-    }
-
     .auth-menu {
         display: flex;
         list-style: none;
         margin-left: auto;
-    }
-
-    .nav-menu li {
-        border-left: 1px solid rgba(255,255,255,0.3);
-    }
-
-    .nav-menu a {
-        display: block;
-        padding: 15px 25px;
-        color: #ffffff;
-        text-decoration: none;
-        transition: background-color 0.2s;
-    }
-
-    .nav-menu a:hover {
-        background-color: rgba(0,0,0,0.1);
-    }
-
-    .nav-menu a.active {
-        background-color: rgba(0,0,0,0.15);
     }
 
     .auth-menu li {
@@ -87,7 +44,7 @@
     /* 메인 컨테이너 */
     .container {
         max-width: 1200px;
-        margin: 30px auto;
+        margin: 0 auto;
         padding: 20px;
     }
 
@@ -276,4 +233,12 @@
         background-color: #ff6347;
         color: #ffffff;
         border-color: #ff6347;
+    }
+    /* board.css 또는 nav.css 상단 */
+    .html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100%;
+        /* 스크롤바 유무와 상관없이 너비를 일정하게 맞추고 싶다면 아래 줄 추가 */
+        /* overflow-y: scroll; */
     }

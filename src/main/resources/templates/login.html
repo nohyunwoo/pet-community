@@ -14,7 +14,7 @@
         <div class="login-box">
             <h2 class="login-title">로그인</h2>
 
-            <form action="/login" method="POST">
+            <form th:action="@{/login}" method="POST">
                 <div class="form-group">
                     <input name="username" type="text" placeholder="아이디" required>
                 </div>

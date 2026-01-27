@@ -27,6 +27,7 @@ import java.util.List;
 
 @Slf4j
 @Controller
+@RequestMapping("/post")
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
@@ -34,38 +35,26 @@ public class PostController {
     private final CommentService commentService;
     private final LikeService likeService;
 
-    @GetMapping("/board")
-    public String board(@RequestParam(required = false) String keyword,
-                        @RequestParam(defaultValue = "0") int page,
-                        @RequestParam(defaultValue = "10") int size,
-                        Model model){
-        Pageable pageable = PageRequest.of
-                (page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        Page<Post> posts = postService.getPosts(keyword, pageable);
-        model.addAttribute("posts", posts);
-        return "board";
-    }
-
-    @GetMapping("/post")
+    @GetMapping
     public String post(){
         return "post";
     }
 
-    @PostMapping("/post")
+    @PostMapping
     public String savePost(@ModelAttribute PostRequestDTO postRequestDTO,
                            @AuthenticationPrincipal CustomUserDetails customUserDetails) throws IOException {
         postService.createPost(postRequestDTO, customUserDetails.getId());
         return "redirect:/board";
     }
 
-    @PostMapping("/post-like")
+    @PostMapping("/like")
     public ResponseEntity<Long> like(@RequestParam Long postId,
                                      @AuthenticationPrincipal CustomUserDetails userDetails){
-        Long currentLikeCount = likeService.likePost(postId, userDetails.getId());
+        Long currentLikeCount = likeService.toggleLike(postId, userDetails.getId());
         return ResponseEntity.ok(currentLikeCount);
     }
 
-    @GetMapping("/post/{id}")
+    @GetMapping("/{id}")
     public String viewPost(@PathVariable Long id, Model model) {
         Post post = postService.findByIdAndIncreaseCount(id);
         List<CommentResponseDTO> commentByPostId = commentService.getCommentByPostId(id);
@@ -79,7 +68,7 @@ public class PostController {
         return "postView";
     }
 
-    @GetMapping("/post/{id}/edit")
+    @GetMapping("/{id}/edit")
     public String ModifyPost(@PathVariable Long id, Model model){
         Post post = postRepository.findById(id).orElseThrow(()
                 -> new CustomException(ErrorCode.POST_NOT_FOUND));
@@ -87,7 +76,7 @@ public class PostController {
         return "post";
     }
 
-    @PostMapping("/post/{id}/edit")
+    @PostMapping("/{id}/edit")
     public String saveModifyPost(@PathVariable Long id, @ModelAttribute PostRequestDTO dto){
         try{
             postService.updatePost(dto, id);
@@ -108,7 +97,7 @@ public class PostController {
     }
 
 
-    @GetMapping("/like/count")
+    @GetMapping("/like")
     public ResponseEntity<Long> count(@RequestParam Long postId) {
         return ResponseEntity.ok(likeService.getLikeCount(postId));
     }

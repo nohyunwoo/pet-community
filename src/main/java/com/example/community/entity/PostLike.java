@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -15,7 +14,8 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @NoArgsConstructor
-public class Post_like {
+@Table(name = "post_like")
+public class PostLike {
     @Id @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -35,7 +35,7 @@ public class Post_like {
         this.likeCount++;
     }
 
-    public Post_like(Post post, User user) {
+    public PostLike(Post post, User user) {
         this.post = post;
         this.user = user;
     }

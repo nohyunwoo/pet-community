@@ -5,9 +5,11 @@ import lombok.*;
 import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@ToString(exclude = "user")
+@ToString(exclude = {"user", "comments", "likes"})
 @Getter
 @Setter
 @Builder
@@ -40,6 +42,14 @@ public class Post {
 
     private String storedFileName;
 
+    @Builder.Default
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<PostLike> likes = new ArrayList<>();
+
     @PrePersist
     protected void onCreate(){
         this.createdAt = LocalDateTime.now();
@@ -53,5 +63,10 @@ public class Post {
         this.title = title;
         this.content = content;
         this.category = category;
+    }
+
+    public void addComment(Comment comment){
+        this.comments.add(comment); // 댓글 저장
+        comment.setPost(this); // 부모 설정
     }
 }

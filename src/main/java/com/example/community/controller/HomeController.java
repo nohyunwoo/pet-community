@@ -20,7 +20,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String index() {
-        return "redirect:/home"; // 루트로 오면 홈으로 보내주는 설정이 필요할 수 있습니다.
+        return "redirect:/home";
     }
 
     @GetMapping("/home")

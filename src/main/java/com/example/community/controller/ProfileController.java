@@ -14,14 +14,16 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@RequestMapping("/profile")
 @RequiredArgsConstructor
 public class ProfileController {
 
     private final ProfileRepository profileRepository;
 
-    @GetMapping("/profile")
+    @GetMapping
     public String showProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails
                             , Model model
                             , @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable){

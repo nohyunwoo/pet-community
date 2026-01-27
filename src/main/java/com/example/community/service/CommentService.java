@@ -33,7 +33,9 @@ public class CommentService {
         User user = userRepository.findByUserId(username).orElseThrow(()
                 -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        Comment comment = Comment.createComment(commentRequestDTO, post, user);
+        Comment comment = Comment.createComment(commentRequestDTO, user);
+
+        post.addComment(comment);
 
         try{
             commentRepository.save(comment);

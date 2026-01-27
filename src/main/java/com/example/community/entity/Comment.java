@@ -35,10 +35,9 @@ public class Comment {
         this.createdAt = LocalDateTime.now();
     }
 
-    public static Comment createComment(CommentRequestDTO dto, Post post, User user){
+    public static Comment createComment(CommentRequestDTO dto, User user){
         Comment comment = new Comment();
         comment.setContent(dto.getContent());
-        comment.setPost(post);
         comment.setUser(user);
         return comment;
     }

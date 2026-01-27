@@ -15,7 +15,7 @@
     <div class="register-box">
       <h1 class="register-title">회원가입</h1>
 
-      <form action="/register" method="post">
+      <form th:action="@{/register}" method="post">
         <div class="form-group">
           <label for="username">이름 <span class="required">*</span></label>
           <input type="text" id="username" name="username" required>

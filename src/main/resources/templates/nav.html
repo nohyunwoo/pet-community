@@ -2,10 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <div th:fragment="navbar">
-    <th:block th:if="${_csrf}">
-        <meta name="_csrf" th:content="${_csrf.token}"/>
-        <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-    </th:block>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">🐾 펫니쉬</div>
