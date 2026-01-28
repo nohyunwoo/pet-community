@@ -70,7 +70,7 @@ public class PostService {
 
         // Redis 삭제
         redisTemplate.delete("like_count:post:" + id);
-        redisTemplate.delete("post_like" + id);
+        redisTemplate.delete("post_like:" + id);
 
         // 사진 삭제
         if (storedFileName != null) {

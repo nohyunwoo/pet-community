@@ -10,6 +10,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 import static org.springframework.web.util.WebUtils.getRealPath;
@@ -51,18 +54,17 @@ public class FileService {
             return;
         }
 
-        String realPath = getRealPath();
-        File file = new File(realPath + storedFileName);
+        Path filePath = Paths.get(getRealPath()).resolve(storedFileName);
 
-        if(file.exists()){
-            if(file.delete()){
-                log.info("파일 삭제 성공: {}", storedFileName);
+        try {
+            boolean deleted = Files.deleteIfExists(filePath);
+            if (deleted) {
+                log.info("파일 삭제 성공: {}", filePath.toAbsolutePath());
+            } else {
+                log.warn("삭제 실패: 파일이 존재하지 않습니다. 경로: {}", filePath.toAbsolutePath());
             }
-            else{
-                log.warn("파일 삭제 실패(파일은 존재하나 삭제하지 못함): {}", storedFileName);
-            }
-        }else{
-            log.warn("삭제하려는 파일이 존재하지 않음: {}", storedFileName);
+        } catch (IOException e) {
+            log.error("파일 삭제 중 오류 발생 (권한 등): {}", e.getMessage());
         }
 
     }
