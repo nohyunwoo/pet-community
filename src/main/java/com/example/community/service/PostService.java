@@ -74,24 +74,10 @@ public class PostService {
 
         // 사진 삭제
         if (storedFileName != null) {
-            deletePhysicalFile(storedFileName);
+            fileService.deleteFile(storedFileName);
         }
 
         postRepository.delete(post);
-    }
-
-    @Value("${file.upload-path}")
-    private String uploadPath;
-
-    public void deletePhysicalFile(String fileName) {
-        Path filePath = Paths.get(uploadPath).resolve(fileName);
-
-        try {
-            Files.deleteIfExists(filePath);
-            log.info("파일 삭제 성공: {}", filePath.toAbsolutePath());
-        } catch (IOException e) {
-            log.error("파일 삭제 실패: {}", e.getMessage());
-        }
     }
 
     @Transactional
