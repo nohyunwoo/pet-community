@@ -27,15 +27,15 @@ public class LikeService {
     @Transactional
     public Long toggleLike(Long postId, Long userId) {
         String redisCountKey = "like_count:post:" + postId;
-        String userLikeKey = "post_like:" + postId + ":" + userId;
+        String likesSetKey = "post_like:" + postId;
 
         // 1. 레디스에서 이미 좋아요를 눌렀는지 확인
-        boolean alreadyLiked = Boolean.TRUE.equals(redisTemplate.hasKey(userLikeKey));
+        boolean alreadyLiked = Boolean.TRUE.equals(redisTemplate.opsForSet()
+                .isMember(likesSetKey, String.valueOf(userId)));
 
         if (!alreadyLiked) {
+            redisTemplate.opsForSet().add(likesSetKey, String.valueOf(userId));
             Long updatedCount = redisTemplate.opsForValue().increment(redisCountKey);
-
-            redisTemplate.opsForValue().set(userLikeKey, "true");
 
             Post post = postRepository.findById(postId).orElseThrow(() ->
                     new CustomException(ErrorCode.POST_NOT_FOUND));
@@ -46,9 +46,8 @@ public class LikeService {
 
             return updatedCount;
         } else {
+            redisTemplate.opsForSet().remove(likesSetKey, String.valueOf(userId));
             Long updatedCount = redisTemplate.opsForValue().decrement(redisCountKey);
-
-            redisTemplate.delete(userLikeKey);
 
             postLikeRepository.deleteByPost_IdAndUser_Id(postId, userId);
 

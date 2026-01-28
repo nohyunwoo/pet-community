@@ -19,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -68,8 +69,8 @@ public class PostService {
         }
 
         // Redis 삭제
-        String likeCountKey = "like_count:post:" + id;
-        redisTemplate.delete(likeCountKey);
+        redisTemplate.delete("like_count:post:" + id);
+        redisTemplate.delete("post_like" + id);
 
         // 사진 삭제
         if (storedFileName != null) {
