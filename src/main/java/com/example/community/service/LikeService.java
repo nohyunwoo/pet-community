@@ -10,11 +10,14 @@ import com.example.community.repository.PostRepository;
 import com.example.community.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LikeService {
@@ -29,29 +32,34 @@ public class LikeService {
         String redisCountKey = "like_count:post:" + postId;
         String likesSetKey = "post_like:" + postId;
 
-        // 1. 레디스에서 이미 좋아요를 눌렀는지 확인
-        boolean alreadyLiked = Boolean.TRUE.equals(redisTemplate.opsForSet()
-                .isMember(likesSetKey, String.valueOf(userId)));
+        Long addedCount = redisTemplate.opsForSet().add(likesSetKey, String.valueOf(userId));
 
-        if (!alreadyLiked) {
-            redisTemplate.opsForSet().add(likesSetKey, String.valueOf(userId));
+        if (addedCount != null && addedCount > 0) {
             Long updatedCount = redisTemplate.opsForValue().increment(redisCountKey);
-
             Post post = postRepository.findById(postId).orElseThrow(() ->
                     new CustomException(ErrorCode.POST_NOT_FOUND));
             User user = userRepository.findById(userId).orElseThrow(() ->
                     new CustomException(ErrorCode.USER_NOT_FOUND));
 
-            postLikeRepository.save(new PostLike(post, user));
-
+            try{
+                postLikeRepository.save(new PostLike(post, user));
+            }catch(DataIntegrityViolationException e){
+                redisTemplate.opsForValue().decrement(redisCountKey);
+                redisTemplate.opsForSet().remove(likesSetKey, String.valueOf(userId));
+                log.warn("이미 처리된 좋아요 요청입니다. userId: {}", userId);
+            }
             return updatedCount;
         } else {
-            redisTemplate.opsForSet().remove(likesSetKey, String.valueOf(userId));
-            Long updatedCount = redisTemplate.opsForValue().decrement(redisCountKey);
+            Long removed = redisTemplate.opsForSet().remove(likesSetKey, String.valueOf(userId));
 
-            postLikeRepository.deleteByPost_IdAndUser_Id(postId, userId);
+            if (removed != null && removed > 0) {
+                Long updatedCount = redisTemplate.opsForValue().decrement(redisCountKey);
+                postLikeRepository.deleteByPost_IdAndUser_Id(postId, userId);
+                return updatedCount;
+            }
 
-            return updatedCount;
+            return redisTemplate.opsForValue().get(redisCountKey) != null ?
+                    Long.parseLong(redisTemplate.opsForValue().get(redisCountKey)) : 0L;
         }
     }
 

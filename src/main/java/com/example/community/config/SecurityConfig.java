@@ -53,6 +53,7 @@ public class SecurityConfig {
 
         http.csrf(csrf -> csrf
                         .ignoringRequestMatchers(PathRequest.toStaticResources().atCommonLocations())
+                        .ignoringRequestMatchers("/register", "/login", "/post/like")
                 );
 
         http.authorizeHttpRequests(authorize ->
