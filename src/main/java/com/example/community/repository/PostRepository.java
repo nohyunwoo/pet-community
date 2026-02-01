@@ -16,8 +16,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("SELECT p From Post p ORDER BY p.createdAt DESC")
     List<Post> findTop5Posts(Pageable pageable);
 
-    @Query(value = "SELECT p FROM Post p JOIN FETCH p.user",
-            countQuery ="SELECT COUNT(p) FROM Post p")
+    @Query(value = "SELECT p FROM Post p " +
+            "JOIN FETCH p.user u " +
+            "JOIN FETCH u.profile",
+            countQuery = "SELECT COUNT(p) FROM Post p")
     Page<Post> findAllWithUser(Pageable pageable);
 
     List<Post> findByTitleContaining(String keyword);
