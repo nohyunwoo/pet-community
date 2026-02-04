@@ -20,7 +20,6 @@ import static org.springframework.web.util.WebUtils.getRealPath;
 @Slf4j
 @Service
 public class FileService {
-    // 도커 컨테이너 내부의 경로입니다.
     @Value("${file.upload-path}")
     private String uploadPath;
 
@@ -33,7 +32,9 @@ public class FileService {
         }
 
         String originalFilename = file.getOriginalFilename();
-        String storedFileName = UUID.randomUUID().toString() + "_" + originalFilename;
+        String fileNameWithoutExtension = originalFilename.substring(0, originalFilename.lastIndexOf("."));
+
+        String baseFileName = UUID.randomUUID().toString() + "_" + fileNameWithoutExtension;
         String realPath = getRealPath();
 
         try {
@@ -41,12 +42,12 @@ public class FileService {
                     .size(800, 800)
                     .outputQuality(0.75)
                     .outputFormat("jpg")
-                    .toFile(new File(realPath + storedFileName));
+                    .toFile(new File(realPath + baseFileName));
         } catch (IOException e) {
             throw new CustomException(ErrorCode.IMAGE_SIZE_EXCEEDED);
         }
 
-        return storedFileName;
+        return baseFileName + ".jpg";
     }
 
     public void deleteFile(String storedFileName){
