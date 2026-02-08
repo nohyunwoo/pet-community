@@ -26,19 +26,7 @@ public class UserService {
             throw new IllegalArgumentException("이미 사용중인 아이디입니다.");
         }
 
-        User user = User.builder()
-                .username(userRequestDTO.getUsername())
-                .userId(userRequestDTO.getUserId())
-                .password(passwordEncoder.encode(userRequestDTO.getPassword()))
-                .sex(userRequestDTO.getSex())
-                .userDate(userRequestDTO.getUserDate())
-                .build();
-
-        Profile profile = new Profile();
-        profile.setBio("안녕하세요"+ user.getUsername() + "입니다. 잘 부탁드려요!!");
-
-        profile.setUser(user);
-        user.setProfile(profile);
+        User user = userRequestDTO.toEntity(passwordEncoder);
 
         userRepository.save(user);
     }

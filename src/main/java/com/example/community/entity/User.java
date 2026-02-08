@@ -44,4 +44,12 @@ public class User {
     public void prePersist(){
         this.regDate = LocalDate.now();
     }
+
+    public void createDefaultProfile(){
+        Profile defaultProfile = new Profile();
+        defaultProfile.setBio("안녕하세요 "+ this.username + "입니다. 잘 부탁드려요!!");
+
+        this.profile = defaultProfile;
+        defaultProfile.setUser(this);
+    }
 }
