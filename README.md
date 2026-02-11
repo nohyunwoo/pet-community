@@ -23,6 +23,7 @@
 * **사용자 인증**: Spring Security를 활용한 회원 보안 및 권한 관리
 
 ## 🚀 DB(MySQL)
+<img width="1847" height="1590" alt="community" src="https://github.com/user-attachments/assets/64e58a68-08f3-4ea2-b66d-29578f0d0ae6" />
 
 
 ---
