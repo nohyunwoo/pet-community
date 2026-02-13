@@ -14,7 +14,15 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @NoArgsConstructor
-@Table(name = "post_like")
+@Table(
+        name = "post_like",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_post_like_user",
+                        columnNames = {"post_id", "user_id"}
+                )
+        }
+)
 public class PostLike {
     @Id @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
