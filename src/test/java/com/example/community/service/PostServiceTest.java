@@ -27,7 +27,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class PostControllerTest {
+class PostServiceTest {
 
     @Mock
     private RedisTemplate<String, String> redisTemplate;
