@@ -51,6 +51,42 @@
     * 실행 쿼리 수(10개 기준)를 **8회에서 2회(데이터 조회 1회 + 카운트 1회)로 축소**
     * DB 조회 쿼리 수를 **기존 대비 약 75% 감소**시켜 API 응답 속도 및 리소스 효율성 극대화
 
+## ✅ 복합 인덱스 설계를 통한 최신순 페이징 조회 성능 개선
+* **문제 인식**
+  * 게시판은 데이터가 지속적으로 누적되는 구조이며, 최신순 정렬 기반 목록 조회는 데이터 증가 시 성능 저하 가능성이 존재한다고 판단
+  * 대량 데이터 환경에서 실행 계획(EXPLAIN)을 분석한 결과, 정렬 컬럼에 인덱스가 없어 **Full Table Scan + filesort**가 발생하는 구조임을 확인
+
+* **테스트 환경**
+  * DB: MySQL 8.4 (InnoDB)
+  * 데이터 규모: 약 100,000건
+  * 분석 방법: EXPLAIN 기반 실행 계획 비교
+  * 실행 환경: Local (Spring Boot + JPA)
+  * 실험 조건: 최신순 목록 조회 (`ORDER BY created_at DESC, id DESC`, `LIMIT 10`)
+
+* **인덱스 적용 전 실행 계획**
+  * `key = NULL`
+  * `rows ≈ 99,608`
+  * `Extra = Using filesort`
+  * → `LIMIT 10`임에도 약 100,000건을 스캔 후 정렬 수행
+
+* **해결 방법**
+  * 최신순 정렬 조건과 일치하는 `(created_at, id)` 복합 인덱스 설계 및 적용
+    ```sql
+    CREATE INDEX idx_post_created_at_id
+    ON post (created_at DESC, id DESC);
+    ```
+
+* **인덱스 적용 후 실행 계획**
+  * `key = idx_post_created_at_id`
+  * `rows = 10`
+  * `Extra = Using index`
+  * → 인덱스 정렬 구조를 활용하여 filesort 제거 및 필요한 10건만 조회
+
+* **성과**
+  * 스캔 대상 행 수 약 99,608 → 10으로 감소
+  * 별도 정렬(filesort) 제거
+  * 대량 데이터 환경에서도 안정적인 최신순 페이징 조회 구조 확보
+
 ---
 
 ## 📂 배포 및 CI/CD (Deployment)
